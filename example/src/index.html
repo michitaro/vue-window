@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>window sample</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #777;
+        }
+
+        a {
+            color: black;
+            display: inline-block;
+            text-decoration: none;
+            padding: 0.5em;
+            margin: 0.5em;
+            border-radius: 4pt;
+            background-color: #eee;
+            box-shadow: 0 0 4pt rgba(0, 0, 0, 0.25);
+        }
+
+        a:hover {
+            background-color: #ddd;
+        }
+
+        ul {
+            position: fixed;
+            bottom: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline-block;
+            margin: 0 0 0 1em;
+            text-align: center;
+        }
+
+        .github {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+        a.active {
+            background-color: #aaa;
+        }
+    </style>
+    <script src="./bundle.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            var sampleId = location.search || '?Sample1'
+            var as = document.querySelectorAll('a')
+            for (var i = 0; i < as.length; i++) {
+                var a = as.item(i)
+                '?' + a.href.split('?')[1] == sampleId && a.classList.add('active')
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <ul>
+        <li>
+            <a href="?Sample1">Basic</a>
+            <br />
+            <a href="https://github.com/michitaro/vue-window/blob/master/example/src/sample1.vue" target="_blank">(code)</a>
+        </li>
+        <li>
+            <a href="?Sample2">Close Button</a>
+            <br />
+            <a href="https://github.com/michitaro/vue-window/blob/master/example/src/sample2.vue" target="_blank">(code)</a>
+        </li>
+        <li>
+            <a href="?Sample3">Positions</a>
+            <br />
+            <a href="https://github.com/michitaro/vue-window/blob/master/example/src/sample3.vue" target="_blank">(code)</a>
+        </li>
+        <li>
+            <a href="?Sample4">Another color theme</a>
+            <br />
+            <a href="https://github.com/michitaro/vue-window/blob/master/example/src/sample4.vue" target="_blank">(code)</a>
+        </li>
+        <li>
+            <a href="?Sample5">z-index group</a>
+            <br />
+            <a href="https://github.com/michitaro/vue-window/blob/master/example/src/sample5.vue" target="_blank">(code)</a>
+        </li>
+        <li>
+            <a href="?Sample6">Resizable</a>
+            <br />
+            <a href="https://github.com/michitaro/vue-window/blob/master/example/src/sample6.vue" target="_blank">(code)</a>
+        </li>
+    </ul>
+    <a class="github" href="https://github.com/michitaro/vue-window" target="_blank">View on Github</a>
+</body>
+
+</html>
