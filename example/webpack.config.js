@@ -3,7 +3,6 @@ module.exports = {
         "./src/main.ts",
         "file-loader?name=index.html!./src/index.html",
     ],
-    devtool: 'eval',
     output: {
         path: `${__dirname}/dist`,
         filename: 'bundle.js',

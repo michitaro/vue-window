@@ -1,7 +1,7 @@
 # vue-window
 ## Introduction
 Recent web applications are mainly for mobile environments, window UI is no longer mainstream.
-However, Window UI is still useful for professional web applications for PC environments.
+However, window UI is still useful for professional web applications for PC environments.
 This package is an implementation of window UI for PC environment as a Vue Component.
 
 ### [Working Demo](https://michitaro.github.io/vue-window)
