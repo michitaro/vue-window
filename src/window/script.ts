@@ -3,15 +3,15 @@ import { DraggableHelper } from "../draggable_helper"
 import { ResizableHelper } from "../resizable_helper"
 import { WindowStyle } from "../style"
 import MyButton from '../button.vue'
-import ZIndex from '../z_index.vue'
 import { naturalSize } from "../dom"
+import { ZElement } from "../z_element"
 
 
 const instances: WindowType[] = []
 
 
 @Component({
-    components: { MyButton, ZIndex }
+    components: { MyButton }
 })
 export class WindowType extends Vue {
     @Prop({ type: Boolean, default: true })
@@ -27,7 +27,7 @@ export class WindowType extends Vue {
     resizable: boolean
 
     @Prop({ type: Boolean, default: true })
-    raiseZIndexWhenOpen: boolean
+    activateWhenOpen: boolean
 
     @Prop({ type: String, default: 'auto' })
     initialPosition: string
@@ -38,17 +38,25 @@ export class WindowType extends Vue {
     @Inject()
     windowStyle: WindowStyle
 
+    private zIndex = 'auto'
+
     draggableHelper: DraggableHelper
     resizableHelper: ResizableHelper
+
+    zElement: ZElement
 
     mounted() {
         instances.push(this)
         this.isOpen && setPosition(this, this.initialPosition)
         this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement())
         this.resizable && (this.resizableHelper = new ResizableHelper(this.windowElement()))
+        this.zElement = new ZElement(this.zGroup, zIndex => {
+            this.zIndex = `${zIndex}`
+        })
     }
 
     beforeDestroy() {
+        this.zElement.unregister()
         this.resizableHelper && this.resizableHelper.teardown()
         this.draggableHelper.teardown()
         instances.splice(instances.indexOf(this), 1)
@@ -62,8 +70,21 @@ export class WindowType extends Vue {
         return this.$refs.titlebar as HTMLElement
     }
 
-    get style() {
-        return this.windowStyle
+    activate() {
+        this.zElement.raise()
+    }
+
+    get styleWindow() {
+        return { ...this.windowStyle.window, zIndex: this.zIndex }
+    }
+
+    get styleTitlebar() {
+        return this.windowStyle.titlebar
+    }
+
+    get styleContent() {
+        return this.windowStyle.content
+
     }
 
     @Watch('resizable')
@@ -73,12 +94,18 @@ export class WindowType extends Vue {
 
     @Watch('isOpen')
     private onIsOpenChange(isOpen: boolean) {
-        if (isOpen && this.raiseZIndexWhenOpen)
-            (this.$refs.zIndex as any).raise()
+        if (isOpen && this.activateWhenOpen)
+            this.activate()
+    }
+
+    @Watch('zGroup')
+    private onZGroupChange() {
+        this.zElement.group = this.zGroup
     }
 }
 
 
+// todo: cleanup
 function setPosition(w: WindowType, positionString: string) {
     const el = w.windowElement()
     const { width, height } = naturalSize(el)
@@ -88,14 +115,14 @@ function setPosition(w: WindowType, positionString: string) {
         case 'auto':
             {
                 let x = 20
-                let y = 40
+                let y = 50
                 let nTries = 0
                 do {
                     if (instances.every(j => {
                         if (w == j)
                             return true
                         const { left, top } = j.windowElement().getBoundingClientRect()
-                        return distance(left, top, x, y) > 4
+                        return distance2(left, top, x, y) > 16
                     })) {
                         break
                     }
@@ -130,8 +157,8 @@ function setPosition(w: WindowType, positionString: string) {
 }
 
 
-function distance(x1: number, y1: number, x2: number, y2: number) {
+function distance2(x1: number, y1: number, x2: number, y2: number) {
     const dx = x1 - x2
     const dy = y1 - y2
-    return Math.sqrt(dx * dx + dy * dy)
+    return dx * dx + dy * dy
 }

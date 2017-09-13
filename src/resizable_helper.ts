@@ -4,7 +4,7 @@ import { naturalSize } from "./dom"
 export class ResizableHelper {
     private handles: HandleBase[]
 
-    constructor(readonly container: HTMLElement) {
+    constructor(readonly container: HTMLElement, readonly onResiza?: () => void) {
         this.handles = HandleClasses.map(H => new H(container, this))
     }
 
@@ -47,8 +47,10 @@ abstract class HandleBase {
         e.preventDefault()
         e.stopPropagation()
         const { width: naturalWidth, height: naturalHeight } = naturalSize(this.container)
-        this.minWidth = naturalWidth
-        this.minHeight = naturalHeight
+        // this.minWidth = naturalWidth
+        // this.minHeight = naturalHeight
+        this.minWidth = 400
+        this.minHeight = 300
         const { left, top, width, height, right, bottom } = this.container.getBoundingClientRect()
         this.x0 = e.clientX
         this.y0 = e.clientY
@@ -69,10 +71,11 @@ abstract class HandleBase {
         e.stopPropagation()
         this.setPosition(e)
         const { width, height, left, top } = this.container.getBoundingClientRect()
-        this.container.style.width = `${Math.max(this.minWidth, width)}px`
-        this.container.style.height = `${Math.max(this.minHeight, height)}px`
-        this.container.style.left = `${Math.min(this.maxLeft, left)}px`
-        this.container.style.top = `${Math.min(this.maxTop, top)}px`
+        // this.container.style.width = `${Math.max(this.minWidth, width)}px`
+        // this.container.style.height = `${Math.max(this.minHeight, height)}px`
+        // this.container.style.left = `${Math.min(this.maxLeft, left)}px`
+        // this.container.style.top = `${Math.min(this.maxTop, top)}px`
+        this.helper.onResiza && this.helper.onResiza()
     }
 
     private mouseup = (e: MouseEvent) => {

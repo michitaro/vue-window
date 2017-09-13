@@ -1,24 +1,22 @@
 <template>
-    <z-index ref="zIndex" :group="zGroup">
-        <transition name="fade">
-            <div v-show="isOpen" class="window" :style="style.window" ref="window" @mousedown="$refs.zIndex.raise()">
-                <div class="titlebar" :style="style.titlebar" ref="titlebar">
-                    <div class="title">
-                        <template v-if="$slots.title">
-                            <slot name="title" />
-                        </template>
-                        <template v-else>{{title}}</template>
-                    </div>
-                    <template v-if="closeButton">
-                        <my-button @click="$emit('closebuttonclick')">&times;</my-button>
+    <transition name="fade" @after-leave="$emit('close')">
+        <div v-show="isOpen" class="window" :style="styleWindow" ref="window" @mousedown="activate">
+            <div class="titlebar" :style="styleTitlebar" ref="titlebar">
+                <div class="title">
+                    <template v-if="$slots.title">
+                        <slot name="title" />
                     </template>
+                    <template v-else>{{title}}</template>
                 </div>
-                <div class="content" :style="style.content">
-                    <slot/>
-                </div>
+                <template v-if="closeButton">
+                    <my-button @click="$emit('closebuttonclick')">&times;</my-button>
+                </template>
             </div>
-        </transition>
-    </z-index>
+            <div class="content" :style="styleContent">
+                <slot/>
+            </div>
+        </div>
+    </transition>
 </template>
 
 <script lang="ts">
@@ -44,6 +42,7 @@ export default WindowType
 
 .title {
     flex-grow: 1;
+    white-space: nowrap;
 }
 
 .content {

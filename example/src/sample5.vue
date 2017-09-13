@@ -2,7 +2,7 @@
     <div>
     
         <hsc-window-style-white>
-            <template v-for="i in [1, 2, 3, 4]">
+            <template v-for="i in [1, 2, 3, 4]", :zGroup="0">
                 <hsc-window :key="i" :title="`Base Layer #${i}`">
                     <fieldset>
                         <legend>&alpha;</legend>

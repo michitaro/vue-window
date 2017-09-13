@@ -5,7 +5,7 @@ export class DraggableHelper {
     }
 
     teardown() {
-        this.handle.removeEventListener('mousedown')
+        this.handle.removeEventListener('mousedown', this.mousedown)
         this.handle.classList.remove('draggable-handle')
     }
 

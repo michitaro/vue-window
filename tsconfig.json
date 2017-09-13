@@ -9,10 +9,8 @@
         "importHelpers": true,
         "lib": [
             "dom",
-            "es5"
+            "es5",
+            "es2015.collection"
         ]
-    },
-    "include": [
-        "./src/**/*.ts"
-    ]
+    }
 }
