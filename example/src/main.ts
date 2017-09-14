@@ -1,4 +1,4 @@
-import * as hscWindow from "../../src"
+import * as VueWindow from "../../src"
 import Vue from 'vue'
 import Sample1 from "./sample1.vue"
 import Sample2 from "./sample2.vue"
@@ -7,6 +7,9 @@ import Sample4 from "./sample4.vue"
 import Sample5 from "./sample5.vue"
 import Sample6 from "./sample6.vue"
 import Sample7 from "./sample7.vue"
+
+
+Vue.use(VueWindow)
 
 
 window.addEventListener('load', e => {
@@ -19,7 +22,6 @@ window.addEventListener('load', e => {
         Sample6,
         Sample7,
     } as any)[location.search.substr(1)] || Sample1
-    Vue.use(hscWindow)
     new Vue({
         el: emptyElement(),
         render(h: Vue.CreateElement) {
