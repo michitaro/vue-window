@@ -1,5 +1,5 @@
 export class DraggableHelper {
-    constructor(readonly handle: HTMLElement, readonly container: HTMLElement) {
+    constructor(readonly handle: HTMLElement, readonly container: HTMLElement, readonly onMove?: () => void) {
         handle.addEventListener('mousedown', this.mousedown)
         handle.classList.add('draggable-handle')
     }
@@ -26,6 +26,7 @@ export class DraggableHelper {
         this.container.style.left = `${e.clientX - this.offsetX}px`
         this.container.style.top = `${e.clientY - this.offsetY}px`
         const { left, top } = this.container.style
+        this.onMove && this.onMove()
     }
 
     private mouseup = (e: MouseEvent) => {

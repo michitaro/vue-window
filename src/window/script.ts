@@ -48,14 +48,16 @@ export class WindowType extends Vue {
     mounted() {
         instances.push(this)
         this.isOpen && setPosition(this, this.initialPosition)
-        this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement())
+        this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.fixPosition())
         this.resizable && (this.resizableHelper = new ResizableHelper(this.windowElement()))
         this.zElement = new ZElement(this.zGroup, zIndex => {
             this.zIndex = `${zIndex}`
         })
+        window.addEventListener('resize', this.onResizeWindow)
     }
 
     beforeDestroy() {
+        window.removeEventListener('resize', this.onResizeWindow)
         this.zElement.unregister()
         this.resizableHelper && this.resizableHelper.teardown()
         this.draggableHelper.teardown()
@@ -101,6 +103,19 @@ export class WindowType extends Vue {
     @Watch('zGroup')
     private onZGroupChange() {
         this.zElement.group = this.zGroup
+    }
+
+    private fixPosition() {
+        const w = this.windowElement()
+        const rect = w.getBoundingClientRect()
+        if (rect.left < 0) w.style.left = `0px`
+        if (rect.top < 0) w.style.top = `0px`
+        if (rect.right > window.innerWidth) w.style.left = `${window.innerWidth - rect.width}px`
+        if (rect.bottom > window.innerHeight) w.style.top = `${window.innerHeight - rect.height}px`
+    }
+
+    private onResizeWindow = () => {
+        this.fixPosition()
     }
 }
 
