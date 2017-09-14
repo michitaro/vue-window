@@ -50,9 +50,7 @@ export class WindowType extends Vue {
         this.isOpen && setPosition(this, this.initialPosition)
         this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.fixPosition())
         this.resizable && (this.resizableHelper = new ResizableHelper(this.windowElement()))
-        this.zElement = new ZElement(this.zGroup, zIndex => {
-            this.zIndex = `${zIndex}`
-        })
+        this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
         window.addEventListener('resize', this.onResizeWindow)
     }
 
