@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hsc-menu-style-white style="position: fixed; z-index: 2;">
+        <hsc-menu-style-metal style="position: fixed; z-index: 2;">
             <hsc-menu-bar style="border-radius: 0 0 4pt 0">
                 <hsc-menu-bar-item label="Number">
                     <hsc-menu-item label="New Random Number" keybind="alt+n" @click="newRandomNumber" />
@@ -10,7 +10,7 @@
                     <hsc-menu-item v-for="w of numberWindows" :key="w.id" :label="w.label" @click="w.isOpen=!w.isOpen" :checked="w.isOpen" />
                 </hsc-menu-bar-item>
             </hsc-menu-bar>
-        </hsc-menu-style-white>
+        </hsc-menu-style-metal>
 
         <hsc-window-style-metal style="position: fixed; z-index: 1">
             <hsc-window v-for="w of numberWindows" :key="w.id" :title="w.label" :closeButton="true" @closebuttonclick="w.isOpen=false" :isOpen="w.isOpen">

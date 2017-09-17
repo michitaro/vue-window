@@ -13,6 +13,7 @@ This package is an implementation of window UI for PC environment as a Vue Compo
 * Configurable color theme
 * Built-in 3 color themes
 * Open / Close animation
+* Tested on Safari10, Chrome60, Firefox55, IE11, Edge38 For PCs 
 
 ![Screenshot](./docs/screenshot.png)
 
@@ -59,4 +60,8 @@ Vue.use(require('@hscmap/vue-window'))
 
 Other examples are available [here](http://michitaro.github.io/vue-window/).
 
-see also [@hscmap/vue-menu](https://github.com/michitaro/vue-menu)
+see also [@hscmap/vue-menu](https://github.com/michitaro/vue-menu).
+This is a menu UI component for vue2 with the same color themes.
+
+# Contributing
+Any comments, suggestions or PRs are welcome 😀

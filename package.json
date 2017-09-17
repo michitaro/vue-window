@@ -16,7 +16,7 @@
     "vue-property-decorator": "^5.2.1"
   },
   "devDependencies": {
-    "@hscmap/vue-menu": "^1.0.14",
+    "@hscmap/vue-menu": "^1.1.0",
     "@types/lodash": "^4.14.74",
     "css-loader": "^0.28.5",
     "file-loader": "^0.11.2",
