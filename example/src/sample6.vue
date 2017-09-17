@@ -12,7 +12,7 @@
             </hsc-menu-bar>
         </hsc-menu-style-white>
 
-        <hsc-window-style-white style="position: fixed; z-index: 1">
+        <hsc-window-style-metal style="position: fixed; z-index: 1">
             <hsc-window v-for="w of numberWindows" :key="w.id" :title="w.label" :closeButton="true" @closebuttonclick="w.isOpen=false" :isOpen="w.isOpen">
                 <table>
                     <tr>
@@ -31,7 +31,7 @@
                     </tr>
                 </table>
             </hsc-window>
-        </hsc-window-style-white>
+        </hsc-window-style-metal>
     </div>
 </template>
 
@@ -81,6 +81,7 @@ th {
     text-align: center;
     padding: 1em;
     box-shadow: 0 0 4pt rgba(0, 0, 0, 0.25);
+    background-color: #eee;
     border-radius: 4pt;
 }
 </style>

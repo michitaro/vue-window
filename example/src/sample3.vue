@@ -1,5 +1,5 @@
 <template>
-    <hsc-window-style-white>
+    <hsc-window-style-metal>
     
         <hsc-window title="Center" initialPosition="center">
             <fieldset>
@@ -38,5 +38,5 @@
             </hsc-window>
         </template>
     
-    </hsc-window-style-white>
+    </hsc-window-style-metal>
 </template>

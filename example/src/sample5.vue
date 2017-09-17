@@ -1,7 +1,7 @@
 <template>
     <div>
     
-        <hsc-window-style-white>
+        <hsc-window-style-metal>
             <template v-for="i in [1, 2, 3, 4]", :zGroup="0">
                 <hsc-window :key="i" :title="`Base Layer #${i}`">
                     <fieldset>
@@ -10,7 +10,7 @@
                     </fieldset>
                 </hsc-window>
             </template>
-        </hsc-window-style-white>
+        </hsc-window-style-metal>
     
         <hsc-window-style-black>
             <template v-for="i in [1, 2, 3, 4]">

@@ -1,5 +1,5 @@
 <template>
-    <hsc-window-style-white>
+    <hsc-window-style-metal>
     
         <hsc-window title="Window 1" :closeButton="true" :isOpen="isOpen" @closebuttonclick="isOpen=false">
             Parameters:
@@ -15,7 +15,7 @@
 
         <button @click="isOpen = ! isOpen">Toggle Window 1</button>
     
-    </hsc-window-style-white>
+    </hsc-window-style-metal>
 </template>
 
 

@@ -49,6 +49,7 @@ export const StyleBlack: Vue.ComponentOptions<Vue> = StyleFactory({
     }
 })
 
+
 export const StyleWhite: Vue.ComponentOptions<Vue> = StyleFactory({
     window: {
         color: '#000',
@@ -57,7 +58,30 @@ export const StyleWhite: Vue.ComponentOptions<Vue> = StyleFactory({
     },
     titlebar: {
         backgroundColor: 'rgba(191, 191, 191, 0.9)'
-        // background: 'linear-gradient(to bottom, rgb(215, 215, 215), rgb(191, 191, 191))'
+    },
+    content: {
+    },
+    button: {
+        color: '#000'
+    },
+    buttonHover: {
+        backgroundColor: 'rgba(0, 0, 0, 0.25)'
+    },
+    buttonActive: {
+        color: '#fff',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    }
+})
+
+
+export const StyleMetal: Vue.ComponentOptions<Vue> = StyleFactory({
+    window: {
+        color: '#000',
+        boxShadow: '0 4pt 8pt rgba(0, 0, 0, 0.5)',
+        background: 'linear-gradient(to bottom, rgb(215, 215, 215), rgb(191, 191, 191))'
+    },
+    titlebar: {
+        background: 'linear-gradient(to bottom, rgb(215, 215, 215), rgb(191, 191, 191))'
     },
     content: {
     },

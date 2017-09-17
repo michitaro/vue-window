@@ -11,7 +11,7 @@ This package is an implementation of window UI for PC environment as a Vue Compo
 * Automatic z-index control
 * z-index group
 * Configurable color theme
-* Built-in 2 color themes
+* Built-in 3 color themes
 * Open / Close animation
 
 ![Screenshot](./docs/screenshot.png)
@@ -41,7 +41,7 @@ Vue.use(require('@hscmap/vue-window'))
 # Example
 ```html
 <template>
-    <hsc-window-style-white>
+    <hsc-window-style-metal>
         <hsc-window title="Window 1" >
             Parameters:
             <fieldset>
@@ -53,7 +53,7 @@ Vue.use(require('@hscmap/vue-window'))
                 <input type="range" />
             </fieldset>
         </hsc-window>
-    </hsc-window-style-white>
+    </hsc-window-style-metal>
 </template>
 ```
 
