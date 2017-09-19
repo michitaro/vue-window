@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Vue component for window",
   "main": "./lib/index.js",
-  "types": "./lib/types/index.js",
+  "types": "./lib/types/index.d.ts",
   "scripts": {
     "prepublish": "webpack",
     "example": "webpack --context example --config ./example/webpack.config.js",
