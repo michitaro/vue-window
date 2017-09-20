@@ -9,6 +9,7 @@ This package is an implementation of window UI for PC environment as a Vue Compo
 * Window component for vue2
 * Windows are draggable
 * Automatic z-index control
+* Resizable
 * z-index group
 * Configurable color theme
 * Built-in 3 color themes
