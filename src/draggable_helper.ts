@@ -25,7 +25,6 @@ export class DraggableHelper {
     private mousemove = (e: MouseEvent) => {
         this.container.style.left = `${e.clientX - this.offsetX}px`
         this.container.style.top = `${e.clientY - this.offsetY}px`
-        const { left, top } = this.container.style
         this.onMove && this.onMove()
     }
 

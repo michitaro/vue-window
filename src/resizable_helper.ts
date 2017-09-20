@@ -1,11 +1,33 @@
 import { naturalSize } from "./dom"
 
 
+export interface Options {
+    minWidth: number
+    maxWidth?: number
+    minHeight: number
+    maxHeight?: number
+    onResize?: () => void
+}
+
+
 export class ResizableHelper {
     private handles: HandleBase[]
 
-    constructor(readonly container: HTMLElement, readonly onResiza?: () => void) {
+    constructor(readonly container: HTMLElement, readonly options: Options) {
         this.handles = HandleClasses.map(H => new H(container, this))
+        const { width, height } = naturalSize(container)
+        const maxWidth = options.maxWidth || window.innerWidth
+        const maxHeight = options.maxHeight || window.innerHeight
+        let resize = false
+        if (width < options.minWidth || width > maxWidth) {
+            container.style.width = `${clamp(width, options.minWidth, maxWidth)}px`
+            resize = true
+        }
+        if (height < options.minHeight || height > maxHeight) {
+            container.style.height = `${clamp(height, options.minHeight, maxHeight)}px`
+            resize = true
+        }
+        resize && options.onResize && options.onResize()
     }
 
     teardown() {
@@ -38,30 +60,43 @@ abstract class HandleBase {
     protected width0: number
     protected height0: number
 
-    protected minWidth: number
-    protected minHeight: number
-    protected maxLeft: number
-    protected maxTop: number
-
     private mousedown = (e: MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        const { width: naturalWidth, height: naturalHeight } = naturalSize(this.container)
-        // this.minWidth = naturalWidth
-        // this.minHeight = naturalHeight
-        this.minWidth = 400
-        this.minHeight = 300
-        const { left, top, width, height, right, bottom } = this.container.getBoundingClientRect()
+        const { left, top, width, height } = this.container.getBoundingClientRect()
         this.x0 = e.clientX
         this.y0 = e.clientY
         this.left0 = left
         this.top0 = top
         this.width0 = width
         this.height0 = height
-        this.maxLeft = right - naturalWidth
-        this.maxTop = bottom - naturalHeight
+        this.calcSafeBoundaries()
         document.addEventListener('mousemove', this.mousemove)
         document.addEventListener('mouseup', this.mouseup)
+    }
+
+    private minLeft: number
+    private maxLeft: number
+    private minRight: number
+    private maxRight: number
+    private minTop: number
+    private maxTop: number
+    private minBottom: number
+    private maxBottom: number
+
+    private calcSafeBoundaries() {
+        const { left, top, right, bottom } = this.container.getBoundingClientRect()
+        const options = this.helper.options
+        const maxWidth = options.maxWidth || window.innerWidth
+        const maxHeight = options.maxHeight || window.innerHeight
+        this.minLeft = Math.max(right - maxWidth, 0)
+        this.maxLeft = right - options.minWidth
+        this.minRight = left + options.minWidth
+        this.maxRight = Math.min(left + maxWidth, window.innerWidth)
+        this.minTop = Math.max(bottom - maxHeight, 0)
+        this.maxTop = bottom - options.minHeight
+        this.minBottom = top + options.minHeight
+        this.maxBottom = Math.min(top + maxHeight, window.innerHeight)
     }
 
     protected abstract setPosition(e: MouseEvent): void;
@@ -70,12 +105,37 @@ abstract class HandleBase {
         e.preventDefault()
         e.stopPropagation()
         this.setPosition(e)
-        const { width, height, left, top } = this.container.getBoundingClientRect()
-        // this.container.style.width = `${Math.max(this.minWidth, width)}px`
-        // this.container.style.height = `${Math.max(this.minHeight, height)}px`
-        // this.container.style.left = `${Math.min(this.maxLeft, left)}px`
-        // this.container.style.top = `${Math.min(this.maxTop, top)}px`
-        this.helper.onResiza && this.helper.onResiza()
+        this.fixPosition()
+        this.helper.options.onResize && this.helper.options.onResize()
+    }
+
+    private fixPosition() {
+        const { width, height, left, top, right, bottom } = this.container.getBoundingClientRect()
+        const options = this.helper.options
+
+        if (left < this.minLeft) {
+            this.container.style.width = `${width + left - this.minLeft}px`
+            this.container.style.left = `${this.minLeft}px`
+        } else if (left > this.maxLeft) {
+            this.container.style.width = `${options.minWidth}px`
+            this.container.style.left = `${this.maxLeft}px`
+        } else if (right < this.minRight) {
+            this.container.style.width = `${options.minWidth}px`
+        } else if (right > this.maxRight) {
+            this.container.style.width = `${this.maxRight - left}px`
+        }
+
+        if (top < this.minTop) {
+            this.container.style.height = `${height + top - this.minTop}px`
+            this.container.style.top = `${this.minTop}px`
+        } else if (top > this.maxTop) {
+            this.container.style.height = `${options.minHeight}px`
+            this.container.style.top = `${this.maxTop}px`
+        } else if (bottom < this.minBottom) {
+            this.container.style.height = `${options.minHeight}px`
+        } else if (bottom > this.maxBottom) {
+            this.container.style.height = `${this.maxBottom - top}px`
+        }
     }
 
     private mouseup = (e: MouseEvent) => {
@@ -208,3 +268,8 @@ HandleClasses.push(
         }
     },
 )
+
+
+function clamp(x: number, min: number, max: number) {
+    return x < min ? min : (x > max ? max : x)
+}

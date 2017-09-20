@@ -1,83 +1,66 @@
 <template>
-    <my-theme>
-        <hsc-window title="Window 1" :closeButton="true" :isOpen="w1" @closebuttonclick="w1 = !w1">
-            Parameters:
-            <fieldset>
-                <legend>&alpha;</legend>
-                <input type="range" />
-            </fieldset>
-            <fieldset>
-                <legend>&beta;</legend>
-                <input type="range" />
-            </fieldset>
-        </hsc-window>
-
-        <hsc-window title="Window 2" :closeButton="true" :isOpen="w2" @closebuttonclick="w2 = !w2">
-            Parameters:
-            <fieldset>
-                <legend>&gamma;</legend>
-                <input type="range" />
-            </fieldset>
-            <fieldset>
-                <legend>&delta;</legend>
-                <input type="range" />
-            </fieldset>
-        </hsc-window>
-        <button @click="w1 = !w1">toggle window1</button>
-        <button @click="w2 = !w2">toggle window2</button>
-    </my-theme>
+    <div>
+        <component v-for="(style, name) in styles" :is="style" :key="name">
+            <hsc-window :title="name" :closeButton="true" :isOpen="isOpen[name]" @closebuttonclick="isOpen[name] = false">
+                Parameters:
+                <fieldset>
+                    <legend>&alpha;</legend>
+                    <input type="range" />
+                </fieldset>
+                <fieldset>
+                    <legend>&beta;</legend>
+                    <input type="range" />
+                </fieldset>
+            </hsc-window>
+        </component>
+        <button @click="toggle">toggle</button>
+    </div>
 </template>
 
 
 <script lang="ts">
-import { StyleFactory } from '../../src'
-import Vue from 'vue'
+import { StyleFactory, StyleBlack, StyleWhite, StyleMetal } from '../../src'
+import * as _ from 'lodash'
 
-const baseColor = {
-    backgroundColor: '#365c68',
-    color: 'white',
-    boxShadow: '0 4pt 4pt rgba(0, 0, 0, 0.25)'
-}
 
-const active = {
-}
+const StyleBluegreen = StyleFactory({
+    button: {
+        color: 'red'
+    },
+    buttonActive: {
+        color: 'white'
+    },
+    buttonHover: {
+        backgroundColor: 'rgba(255, 0, 0, 0.8)'
+    },
+    content: {
+        backgroundColor: 'rgba(37, 61, 91, 0.8)'
+    },
+    titlebar: {
+        background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.25), #436f7c)'
+    },
+    window: {
+        color: 'white',
+        boxShadow: '0 2pt 8pt rgba(0, 0, 0, 0.5)'
+    },
+})
 
-const disabled = {
-    opacity: '0.5'
-}
 
-const separator = {
-    backgroundColor: '#f00'
-}
+const styles = { StyleBlack, StyleWhite, StyleMetal, StyleBluegreen }
+
 
 export default <any>{
-    components: {
-        'my-theme': StyleFactory({
-            button: {
-                color: 'red'
-            },
-            buttonActive: {
-                color: 'white'
-            },
-            buttonHover: {
-                backgroundColor: 'rgba(255, 0, 0, 0.25)'
-            },
-            content: {
-                backgroundColor: 'rgba(37, 61, 91, 0.5)'
-            },
-            titlebar: {
-                background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.25), #436f7c)'
-            },
-            window: {
-                color: 'white',
-                boxShadow: '0 2pt 8pt rgba(0, 0, 0, 0.5)'
-            },
-        })
-    },
     data() {
         return {
-            w1: true,
-            w2: true,
+            styles,
+            isOpen: _.mapValues(styles, v => true)
+        }
+    },
+    methods: {
+        toggle() {
+            const self = <any>this
+            for (const k of Object.keys(self.isOpen))
+                self.isOpen[k] = !self.isOpen[k]
         }
     }
 }

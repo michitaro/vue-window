@@ -12,7 +12,7 @@
                     <my-button @click="$emit('closebuttonclick')">&times;</my-button>
                 </template>
             </div>
-            <div class="content" :style="styleContent">
+            <div class="content" :style="styleContent" ref="content">
                 <slot/>
             </div>
         </div>
@@ -38,6 +38,7 @@ export default WindowType
     border-radius: 4pt 4pt 0 0;
     font-family: sans-serif;
     padding: .5em;
+    flex: 0 0 auto
 }
 
 .title {

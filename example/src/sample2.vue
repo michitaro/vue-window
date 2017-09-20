@@ -1,6 +1,6 @@
 <template>
     <hsc-window-style-metal>
-    
+
         <hsc-window title="Window 1" :closeButton="true" :isOpen="isOpen" @closebuttonclick="isOpen=false">
             Parameters:
             <fieldset>
@@ -14,15 +14,13 @@
         </hsc-window>
 
         <button @click="isOpen = ! isOpen">Toggle Window 1</button>
-    
+
     </hsc-window-style-metal>
 </template>
 
 
 <script lang="ts">
-import Vue from 'vue'
-
-export default {
+export default <any>{
     data() {
         return {
             isOpen: true,

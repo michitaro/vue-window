@@ -49,7 +49,7 @@ export class WindowType extends Vue {
         instances.push(this)
         this.isOpen && setPosition(this, this.initialPosition)
         this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.fixPosition())
-        this.resizable && (this.resizableHelper = new ResizableHelper(this.windowElement()))
+        this.resizable && this.initResizeHelper()
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
         window.addEventListener('resize', this.onResizeWindow)
     }
@@ -70,6 +70,10 @@ export class WindowType extends Vue {
         return this.$refs.titlebar as HTMLElement
     }
 
+    contentElement() {
+        return this.$refs.content as HTMLElement
+    }
+
     activate() {
         this.zElement.raise()
     }
@@ -83,23 +87,24 @@ export class WindowType extends Vue {
     }
 
     get styleContent() {
-        return this.windowStyle.content
-
+        return this.resizable ?
+            { ...this.windowStyle.content, padding: '0' }
+            : this.windowStyle.content
     }
 
     @Watch('resizable')
-    private onResizableChange(resizable: boolean) {
+    onResizableChange(resizable: boolean) {
         console.error("prop 'resizable' can't be changed")
     }
 
     @Watch('isOpen')
-    private onIsOpenChange(isOpen: boolean) {
+    onIsOpenChange(isOpen: boolean) {
         if (isOpen && this.activateWhenOpen)
             this.activate()
     }
 
     @Watch('zGroup')
-    private onZGroupChange() {
+    onZGroupChange() {
         this.zElement.group = this.zGroup
     }
 
@@ -114,6 +119,37 @@ export class WindowType extends Vue {
 
     private onResizeWindow = () => {
         this.fixPosition()
+    }
+
+    @Prop({ type: Number, default: 0 })
+    minWidth: number
+
+    @Prop({ type: Number, default: 0 })
+    minHeight: number
+
+    @Prop({ type: Number })
+    maxWidth?: number
+
+    @Prop({ type: Number })
+    maxHeight?: number
+
+    private initResizeHelper() {
+        const { height: titlebarHeight } = naturalSize(this.titlebarElement())
+        this.resizableHelper = new ResizableHelper(this.windowElement(), {
+            onResize: () => this.onResize(),
+            minWidth: this.minWidth,
+            minHeight: this.minHeight + titlebarHeight,
+            maxWidth: this.maxWidth,
+            maxHeight: this.maxHeight ? this.maxHeight + titlebarHeight : undefined,
+        })
+    }
+
+    private onResize() {
+        const { width: wWidth, height: wHeight } = this.windowElement().getBoundingClientRect()
+        const { height: tHeight } = this.titlebarElement().getBoundingClientRect()
+        const content = this.contentElement()
+        content.style.width = `${wWidth}px`
+        content.style.height = `${wHeight - tHeight}px`
     }
 }
 

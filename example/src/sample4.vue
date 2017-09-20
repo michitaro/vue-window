@@ -1,43 +1,71 @@
 <template>
-    <hsc-window-style-black>
-        <hsc-window title="Window 1" :closeButton="true" :isOpen="w1" @closebuttonclick="w1 = !w1">
-            Parameters:
-            <fieldset>
-                <legend>&alpha;</legend>
-                <input type="range" />
-            </fieldset>
-            <fieldset>
-                <legend>&beta;</legend>
-                <input type="range" />
-            </fieldset>
+    <hsc-window-style-metal>
+
+        <hsc-window title="with {min,max}{Width,Height}" :resizable="true" :minWidth="200" :minHeight="200" :maxWidth="400" :maxHeight="400">
+            <div class="radial-gradient-1"></div>
         </hsc-window>
 
-        <hsc-window title="Window 2" :closeButton="true" :isOpen="w2" @closebuttonclick="w2 = !w2">
-            Parameters:
-            <fieldset>
-                <legend>&gamma;</legend>
-                <input type="range" />
-            </fieldset>
-            <fieldset>
-                <legend>&delta;</legend>
-                <input type="range" />
-            </fieldset>
+        <hsc-window title="without max{Width,Height}" :resizable="true" :minWidth="200" :minHeight="200">
+            <div class="radial-gradient-2"></div>
         </hsc-window>
-        <button @click="w1 = !w1">toggle window1</button>
-        <button @click="w2 = !w2">toggle window2</button>
-    </hsc-window-style-black>
+
+        <hsc-window title="Scrollable" :resizable="true" :minWidth="100" :minHeight="100" :maxWidth="300" :maxHeight="300">
+            <div style="height: 100%; overflow: auto;">
+                <table>
+                    <tr>
+                        <th>&times;</th>
+                        <th v-for="j in range(n)" :key="j" v-html="j"></th>
+                    </tr>
+                    <tr v-for="i in range(n)" :key="i">
+                        <th v-html="i" />
+                        <td v-for="j in range(n)" :key="j" v-html="i * j" />
+                    </tr>
+                </table>
+            </div>
+        </hsc-window>
+
+        Gradation samples from
+        <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/radial-gradient">https://developer.mozilla.org/en-US/docs/Web/CSS/radial-gradient</a>
+    </hsc-window-style-metal>
 </template>
 
 
-<script lang="ts">
-import Vue from 'vue'
+<style lang="scss" scoped>
+.radial-gradient-1 {
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(ellipse farthest-corner at 45px 45px, #00FFFF 0%, rgba(0, 0, 255, 0) 50%, #0000FF 95%);
+}
 
-export default {
+.radial-gradient-2 {
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(farthest-corner at 45px 45px, #FF0000 0%, #0000FF 100%);
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 4pt;
+}
+
+td,
+th {
+    width: 2em;
+    border-radius: 2pt;
+    padding: 2pt;
+    background-color: #eee;
+    text-align: center;
+}
+</style>
+
+
+<script lang="ts">
+import * as _ from 'lodash'
+
+export default <any>{
     data() {
-        return {
-            w1: true,
-            w2: true,
-        }
-    }
+        return { n: 20 }
+    },
+    methods: { range: _.range }
 }
 </script>
