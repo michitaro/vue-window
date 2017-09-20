@@ -9,7 +9,7 @@
             <div class="radial-gradient-2"></div>
         </hsc-window>
 
-        <hsc-window title="Scrollable" :resizable="true" :minWidth="100" :minHeight="100" :maxWidth="300" :maxHeight="300">
+        <hsc-window title="Scrollable" :resizable="true" :minWidth="100" :minHeight="100" :maxWidth="200" :maxHeight="200">
             <div style="height: 100%; overflow: auto;">
                 <table>
                     <tr>
@@ -18,7 +18,7 @@
                     </tr>
                     <tr v-for="i in range(n)" :key="i">
                         <th v-html="i" />
-                        <td v-for="j in range(n)" :key="j" v-html="i * j" />
+                        <td v-for="j in range(n)" :key="j" v-html="hex(i/n * j/n)" :style="{ backgroundColor: `rgb(${Math.floor(255 * i / n)}, ${Math.floor(255 * j / n)}, 127)` }" />
                     </tr>
                 </table>
             </div>
@@ -44,17 +44,17 @@
 }
 
 table {
-    border-collapse: separate;
-    border-spacing: 4pt;
+    border-collapse: collapse;
 }
 
-td,
-th {
-    width: 2em;
-    border-radius: 2pt;
-    padding: 2pt;
-    background-color: #eee;
+td {
     text-align: center;
+    color: rgba(0, 0, 0, 0.25);
+}
+
+th {
+    color: white;
+    background-color: #000
 }
 </style>
 
@@ -64,8 +64,32 @@ import * as _ from 'lodash'
 
 export default <any>{
     data() {
-        return { n: 20 }
+        return { n: 21 }
     },
-    methods: { range: _.range }
+    methods: {
+        range: _.range,
+        hex(x: number) {
+            let hex = Math.floor(255 * x).toString(16)
+            if (hex.length <= 1)
+                hex = `0${hex}`
+            return hex
+        }
+    }
 }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
