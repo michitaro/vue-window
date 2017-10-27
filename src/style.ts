@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue, * as vue from 'vue'
 
 
 export type Style = Partial<CSSStyleDeclaration>
@@ -14,19 +14,19 @@ export interface WindowStyle {
 }
 
 
-export function StyleFactory(windowStyle: WindowStyle): Vue.ComponentOptions<Vue> {
+export function StyleFactory(windowStyle: WindowStyle): vue.ComponentOptions<Vue> {
     return {
         provide() {
             return { windowStyle }
         },
-        render(this: Vue, h: Vue.CreateElement) {
+        render(this: Vue, h: vue.CreateElement) {
             return h('div', this.$slots.default)
         },
     }
 }
 
 
-export const StyleBlack: Vue.ComponentOptions<Vue> = StyleFactory({
+export const StyleBlack: vue.ComponentOptions<Vue> = StyleFactory({
     window: {
         color: '#fff',
         boxShadow: '0 0 6pt rgba(255, 255, 255, 0.75)',
@@ -50,7 +50,7 @@ export const StyleBlack: Vue.ComponentOptions<Vue> = StyleFactory({
 })
 
 
-export const StyleWhite: Vue.ComponentOptions<Vue> = StyleFactory({
+export const StyleWhite: vue.ComponentOptions<Vue> = StyleFactory({
     window: {
         color: '#000',
         boxShadow: '0 2pt 4pt rgba(0, 0, 0, 0.5)',
@@ -74,7 +74,7 @@ export const StyleWhite: Vue.ComponentOptions<Vue> = StyleFactory({
 })
 
 
-export const StyleMetal: Vue.ComponentOptions<Vue> = StyleFactory({
+export const StyleMetal: vue.ComponentOptions<Vue> = StyleFactory({
     window: {
         color: '#000',
         boxShadow: '0 4pt 8pt rgba(0, 0, 0, 0.5)',

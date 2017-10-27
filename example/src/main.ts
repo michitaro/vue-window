@@ -1,5 +1,5 @@
 import * as VueWindow from "../../src"
-import Vue from 'vue'
+import Vue, * as vue from 'vue'
 import Sample1 from "./sample1.vue"
 import Sample2 from "./sample2.vue"
 import Sample3 from "./sample3.vue"
@@ -13,7 +13,7 @@ Vue.use(VueWindow)
 
 
 window.addEventListener('load', e => {
-    const Sample: Vue.Component = ({
+    const Sample: vue.Component = ({
         Sample1,
         Sample2,
         Sample3,
@@ -24,7 +24,7 @@ window.addEventListener('load', e => {
     } as any)[location.search.substr(1)] || Sample1
     new Vue({
         el: emptyElement(),
-        render(h: Vue.CreateElement) {
+        render(h: vue.CreateElement) {
             return h(Sample)
         }
     })

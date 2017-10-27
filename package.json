@@ -10,25 +10,25 @@
     "example-server": "webpack-dev-server --hot --progress --context example --config ./example/webpack.config.js"
   },
   "dependencies": {
-    "tslib": "^1.7.1",
-    "vue": "^2.4.2",
-    "vue-class-component": "^5.0.2",
-    "vue-property-decorator": "^5.2.1"
+    "tslib": "^1.8.0",
+    "vue": "^2.5.2",
+    "vue-class-component": "^6.0.0",
+    "vue-property-decorator": "^6.0.0"
   },
   "devDependencies": {
-    "@hscmap/vue-menu": "^1.1.0",
-    "@types/lodash": "^4.14.74",
-    "css-loader": "^0.28.5",
-    "file-loader": "^0.11.2",
+    "@hscmap/vue-menu": "^1.2.1",
+    "@types/lodash": "^4.14.80",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.5",
     "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
-    "ts-loader": "^2.3.4",
-    "typescript": "^2.4.2",
-    "vue-loader": "^13.0.4",
-    "vue-template-compiler": "^2.4.2",
-    "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1"
+    "ts-loader": "^3.1.0",
+    "typescript": "^2.5.3",
+    "vue-loader": "^13.3.0",
+    "vue-template-compiler": "^2.5.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
   },
   "keywords": [
     "Window",
