@@ -44,6 +44,8 @@ export default WindowType
 .title {
     flex-grow: 1;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content {
