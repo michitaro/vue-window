@@ -9,6 +9,13 @@
             <div class="radial-gradient-2"></div>
         </hsc-window>
 
+        <hsc-window title="initial{Width,Height}" :resizable="true" :initialWidth="200" :initialHeight="100">
+            <div style="padding: 1em;">
+                <button>Cancel</button>
+                <button>OK</button>
+            </div>
+        </hsc-window>
+
         <hsc-window title="Scrollable" :resizable="true" :minWidth="100" :minHeight="100" :maxWidth="200" :maxHeight="200">
             <div style="height: 100%; overflow: auto;">
                 <table>
@@ -77,19 +84,3 @@ export default <any>{
     }
 }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
