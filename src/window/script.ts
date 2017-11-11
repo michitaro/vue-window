@@ -26,6 +26,9 @@ export class WindowType extends Vue {
     @Prop({ type: Boolean, default: false })
     resizable: boolean
 
+    @Prop({ type: Boolean, default: false })
+    isScrollable: boolean
+
     @Prop({ type: Boolean, default: true })
     activateWhenOpen: boolean
 
@@ -88,9 +91,17 @@ export class WindowType extends Vue {
     }
 
     get styleContent() {
-        return this.resizable ?
-            { ...this.windowStyle.content, padding: '0' }
-            : this.windowStyle.content
+        let style = this.windowStyle.content;
+
+        if (this.resizable) {
+            style.padding = '0';
+        }
+
+        if (this.isScrollable) {
+            style.overflow = 'auto';
+        }
+
+        return style;
     }
 
     @Watch('resizable')
