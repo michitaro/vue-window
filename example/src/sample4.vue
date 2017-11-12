@@ -16,19 +16,17 @@
             </div>
         </hsc-window>
 
-        <hsc-window title="Scrollable" :resizable="true" :minWidth="100" :minHeight="100" :maxWidth="200" :maxHeight="200">
-            <div style="height: 100%; overflow: auto;">
-                <table>
-                    <tr>
-                        <th>&times;</th>
-                        <th v-for="j in range(n)" :key="j" v-html="j"></th>
-                    </tr>
-                    <tr v-for="i in range(n)" :key="i">
-                        <th v-html="i" />
-                        <td v-for="j in range(n)" :key="j" v-html="hex(i/n * j/n)" :style="{ backgroundColor: `rgb(${Math.floor(255 * i / n)}, ${Math.floor(255 * j / n)}, 127)` }" />
-                    </tr>
-                </table>
-            </div>
+        <hsc-window title="Scrollable" :resizable="true" :isScrollable="true" :minWidth="100" :minHeight="100" :maxWidth="200" :maxHeight="200">
+            <table>
+                <tr>
+                    <th>&times;</th>
+                    <th v-for="j in range(n)" :key="j" v-html="j"></th>
+                </tr>
+                <tr v-for="i in range(n)" :key="i">
+                    <th v-html="i" />
+                    <td v-for="j in range(n)" :key="j" v-html="hex(i/n * j/n)" :style="{ backgroundColor: `rgb(${Math.floor(255 * i / n)}, ${Math.floor(255 * j / n)}, 127)` }" />
+                </tr>
+            </table>
         </hsc-window>
 
         Gradation samples from

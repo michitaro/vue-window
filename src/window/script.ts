@@ -26,6 +26,9 @@ export class WindowType extends Vue {
     @Prop({ type: Boolean, default: false })
     resizable: boolean
 
+    @Prop({ type: Boolean, default: false })
+    isScrollable: boolean
+
     @Prop({ type: Boolean, default: true })
     activateWhenOpen: boolean
 
@@ -88,9 +91,17 @@ export class WindowType extends Vue {
     }
 
     get styleContent() {
-        return this.resizable ?
-            { ...this.windowStyle.content, padding: '0' }
-            : this.windowStyle.content
+        let style = this.windowStyle.content;
+
+        if (this.resizable) {
+            style.padding = '0';
+        }
+
+        if (this.isScrollable) {
+            style.overflow = 'auto';
+        }
+
+        return style;
     }
 
     @Watch('resizable')
@@ -129,9 +140,9 @@ export class WindowType extends Vue {
     initialHeight?: number
 
     private setDimension() {
-        const content = this.contentElement()
-        if (this.initialWidth != undefined) content.style.width = `${this.initialWidth}px`
-        if (this.initialHeight != undefined) content.style.height = `${this.initialHeight}px`
+        const winEl = this.windowElement()
+        if (this.initialWidth != undefined) winEl.style.width = `${this.initialWidth}px`
+        if (this.initialHeight != undefined) winEl.style.height = `${this.initialHeight}px`
     }
 
     @Prop({ type: Number, default: 0 })
@@ -149,20 +160,11 @@ export class WindowType extends Vue {
     private initResizeHelper() {
         const { height: titlebarHeight } = naturalSize(this.titlebarElement())
         this.resizableHelper = new ResizableHelper(this.windowElement(), {
-            onResize: () => this.onResize(),
             minWidth: this.minWidth,
             minHeight: this.minHeight + titlebarHeight,
             maxWidth: this.maxWidth,
             maxHeight: this.maxHeight ? this.maxHeight + titlebarHeight : undefined,
         })
-    }
-
-    private onResize() {
-        const { width: wWidth, height: wHeight } = this.windowElement().getBoundingClientRect()
-        const { height: tHeight } = this.titlebarElement().getBoundingClientRect()
-        const content = this.contentElement()
-        content.style.width = `${wWidth}px`
-        content.style.height = `${wHeight - tHeight}px`
     }
 }
 

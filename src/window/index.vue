@@ -27,6 +27,7 @@ export default WindowType
 <style lang="scss" scoped>
 .window {
     display: flex;
+    overflow: hidden;
     flex-flow: column;
     position: absolute;
     border-radius: 4pt 4pt 0 0;
