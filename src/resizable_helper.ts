@@ -1,4 +1,4 @@
-import { naturalSize } from "./dom"
+import { naturalSize, contentSize } from "./dom"
 
 
 export interface Options {
@@ -46,6 +46,7 @@ abstract class HandleBase {
     constructor(readonly container: HTMLElement, readonly helper: ResizableHelper) {
         this.handle = this.createHandleElement()
         this.handle.addEventListener('mousedown', this.mousedown)
+        // this.handle.style.border = 'solid 1px black'
     }
 
     teardown() {
@@ -63,7 +64,7 @@ abstract class HandleBase {
     private mousedown = (e: MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        const { left, top, width, height } = this.container.getBoundingClientRect()
+        const { left, top, width, height } = contentSize(this.container)
         this.x0 = e.clientX
         this.y0 = e.clientY
         this.left0 = left
@@ -85,7 +86,7 @@ abstract class HandleBase {
     private maxBottom: number
 
     private calcSafeBoundaries() {
-        const { left, top, right, bottom } = this.container.getBoundingClientRect()
+        const { left, top, right, bottom } = contentSize(this.container)
         const options = this.helper.options
         const maxWidth = options.maxWidth || window.innerWidth
         const maxHeight = options.maxHeight || window.innerHeight
@@ -110,7 +111,7 @@ abstract class HandleBase {
     }
 
     private fixPosition() {
-        const { width, height, left, top, right, bottom } = this.container.getBoundingClientRect()
+        const { width, height, left, top, right, bottom } = contentSize(this.container)
         const options = this.helper.options
 
         if (left < this.minLeft) {

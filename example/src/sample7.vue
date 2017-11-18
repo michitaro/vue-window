@@ -1,7 +1,7 @@
 <template>
     <div>
         <component v-for="(style, name) in styles" :is="style" :key="name">
-            <hsc-window :resizable="true" :initialWidth="200" :initialHeight="200" :title="name" :closeButton="true" :isOpen="isOpen[name]" @closebuttonclick="isOpen[name] = false">
+            <hsc-window :resizable="true" :title="name" :closeButton="true" :isOpen="isOpen[name]" @closebuttonclick="isOpen[name] = false">
                 Parameters:
                 <fieldset>
                     <legend>&alpha;</legend>
@@ -39,6 +39,7 @@ const StyleBluegreen = StyleFactory({
     titlebar: {
         background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.25), #436f7c)'
     },
+
     window: {
         border: '1px solid #f00',
         color: 'white',
