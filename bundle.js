@@ -33578,7 +33578,6 @@ var render = function() {
               "hsc-window",
               {
                 attrs: {
-                  resizable: true,
                   title: name,
                   closeButton: true,
                   isOpen: _vm.isOpen[name]
