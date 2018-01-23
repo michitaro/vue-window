@@ -7,13 +7,16 @@
     <script src="./vue-window-standalone.js"></script>
     <script>
         window.addEventListener('load', e => {
-            new Vue({
+            var vm = new Vue({
                 el: document.getElementById('root'),
                 data: {
-                    checked: true,
-                    alert: function (msg) { window.alert(msg); }
+                    title: null,
                 }
             })
+            var refreshTitle = function () {
+                vm.$data.title = String(new Date())
+            }
+            setInterval(refreshTitle, 1000)
         })
     </script>
     <style>
@@ -39,7 +42,7 @@
                 </fieldset>
             </hsc-window>
 
-            <hsc-window title="Window 2">
+            <hsc-window :title="title">
                 Parameters:
                 <fieldset>
                     <legend>&gamma;</legend>
