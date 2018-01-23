@@ -1,11 +1,15 @@
 {
   "name": "@hscmap/vue-window",
-  "version": "1.5.0",
+  "version": "1.7.6",
   "description": "Vue component for window",
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",
+  "files": [
+    "lib/",
+    "standalone/dist"
+  ],
   "scripts": {
-    "prepublish": "webpack",
+    "prepublish": "webpack ; npm run standalone",
     "example": "webpack --context example --config ./example/webpack.config.js",
     "example-server": "webpack-dev-server --hot --progress --context example --config ./example/webpack.config.js",
     "standalone": "webpack --context standalone --config ./standalone/webpack.config.js"

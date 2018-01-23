@@ -1,3 +1,4 @@
 /node_modules
 /lib
+/standalone/dist
 .DS_Store
