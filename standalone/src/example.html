@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>VueMenu standalone</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue.js"></script>
+    <script src="./vue-window-standalone.js"></script>
+    <script>
+        window.addEventListener('load', e => {
+            new Vue({
+                el: document.getElementById('root'),
+                data: {
+                    checked: true,
+                    alert: function (msg) { window.alert(msg); }
+                }
+            })
+        })
+    </script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <hsc-window-style-metal>
+            <hsc-window title="Window 1">
+                Parameters:
+                <fieldset>
+                    <legend>&alpha;</legend>
+                    <input type="range" />
+                </fieldset>
+                <fieldset>
+                    <legend>&beta;</legend>
+                    <input type="range" />
+                </fieldset>
+            </hsc-window>
+
+            <hsc-window title="Window 2">
+                Parameters:
+                <fieldset>
+                    <legend>&gamma;</legend>
+                    <input type="range" />
+                </fieldset>
+                <fieldset>
+                    <legend>&delta;</legend>
+                    <input type="range" />
+                </fieldset>
+            </hsc-window>
+        </hsc-window-style-metal>
+    </div>
+</body>
+
+</html>

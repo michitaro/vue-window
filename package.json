@@ -7,7 +7,8 @@
   "scripts": {
     "prepublish": "webpack",
     "example": "webpack --context example --config ./example/webpack.config.js",
-    "example-server": "webpack-dev-server --hot --progress --context example --config ./example/webpack.config.js"
+    "example-server": "webpack-dev-server --hot --progress --context example --config ./example/webpack.config.js",
+    "standalone": "webpack --context standalone --config ./standalone/webpack.config.js"
   },
   "dependencies": {
     "@hscmap/vue-menu": "^1.4.0",
