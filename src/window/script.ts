@@ -5,6 +5,7 @@ import { WindowStyle } from "../style"
 import MyButton from '../button.vue'
 import { naturalSize, contentSize } from "../dom"
 import { ZElement } from "../z_element"
+import { windows } from '../windows';
 
 
 const instances: WindowType[] = []
@@ -55,11 +56,11 @@ export class WindowType extends Vue {
         this.setDimension()
         this.resizable && this.initResizeHelper()
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
-        window.addEventListener('resize', this.onResizeWindow)
+        windows.add(this)
     }
 
     beforeDestroy() {
-        window.removeEventListener('resize', this.onResizeWindow)
+        windows.delete(this)
         this.zElement.unregister()
         this.resizableHelper && this.resizableHelper.teardown()
         this.draggableHelper.teardown()
@@ -102,80 +103,76 @@ export class WindowType extends Vue {
         }
 
         return style;
-}
+    }
 
-@Watch('resizable')
-onResizableChange(resizable: boolean) {
-    console.error("prop 'resizable' can't be changed")
-}
+    @Watch('resizable')
+    onResizableChange(resizable: boolean) {
+        console.error("prop 'resizable' can't be changed")
+    }
 
-@Watch('isOpen')
-onIsOpenChange(isOpen: boolean) {
-    if (isOpen && this.activateWhenOpen)
-        this.activate()
-}
+    @Watch('isOpen')
+    onIsOpenChange(isOpen: boolean) {
+        if (isOpen && this.activateWhenOpen)
+            this.activate()
+    }
 
-@Watch('zGroup')
-onZGroupChange() {
-    this.zElement.group = this.zGroup
-}
+    @Watch('zGroup')
+    onZGroupChange() {
+        this.zElement.group = this.zGroup
+    }
 
-    private fixPosition() {
-    const w = this.windowElement()
-    const rect = w.getBoundingClientRect()
-    if (rect.left < 0) w.style.left = `0px`
-    if (rect.top < 0) w.style.top = `0px`
-    if (rect.right > window.innerWidth) w.style.left = `${window.innerWidth - rect.width}px`
-    if (rect.bottom > window.innerHeight) w.style.top = `${window.innerHeight - rect.height}px`
-}
+    fixPosition() {
+        const w = this.windowElement()
+        const rect = w.getBoundingClientRect()
+        if (rect.left < 0) w.style.left = `0px`
+        if (rect.top < 0) w.style.top = `0px`
+        if (rect.right > window.innerWidth) w.style.left = `${window.innerWidth - rect.width}px`
+        if (rect.bottom > window.innerHeight) w.style.top = `${window.innerHeight - rect.height}px`
+    }
 
-    private onResizeWindow = () => {
-    this.fixPosition()
-}
+    @Prop({ type: Number })
+    initialWidth?: number
 
-@Prop({ type: Number })
-initialWidth ?: number
-
-@Prop({ type: Number })
-initialHeight ?: number
+    @Prop({ type: Number })
+    initialHeight?: number
 
     private setDimension() {
-    const content = this.contentElement()
-    if (this.initialWidth != undefined) content.style.width = `${this.initialWidth}px`
-    if (this.initialHeight != undefined) content.style.height = `${this.initialHeight}px`
-}
+        const content = this.contentElement()
+        if (this.initialWidth != undefined) content.style.width = `${this.initialWidth}px`
+        if (this.initialHeight != undefined) content.style.height = `${this.initialHeight}px`
+    }
 
-@Prop({ type: Number, default: 0 })
-minWidth: number
+    @Prop({ type: Number, default: 0 })
+    minWidth: number
 
-@Prop({ type: Number, default: 0 })
-minHeight: number
+    @Prop({ type: Number, default: 0 })
+    minHeight: number
 
-@Prop({ type: Number })
-maxWidth ?: number
+    @Prop({ type: Number })
+    maxWidth?: number
 
-@Prop({ type: Number })
-maxHeight ?: number
+    @Prop({ type: Number })
+    maxHeight?: number
 
     private initResizeHelper() {
-    const { height: titlebarHeight } = naturalSize(this.titlebarElement())
-    this.resizableHelper = new ResizableHelper(this.windowElement(), {
-        onResize: () => this.onResize(),
-        minWidth: this.minWidth,
-        minHeight: this.minHeight + titlebarHeight,
-        maxWidth: this.maxWidth,
-        maxHeight: this.maxHeight ? this.maxHeight + titlebarHeight : undefined,
-    })
-}
+        const { height: titlebarHeight } = naturalSize(this.titlebarElement())
+        this.resizableHelper = new ResizableHelper(this.windowElement(), {
+            onResize: () => this.onResize(),
+            minWidth: this.minWidth,
+            minHeight: this.minHeight + titlebarHeight,
+            maxWidth: this.maxWidth,
+            maxHeight: this.maxHeight ? this.maxHeight + titlebarHeight : undefined,
+        })
+    }
 
     private onResize() {
-    // const { width: wWidth, height: wHeight } = this.windowElement().getBoundingClientRect()
-    const { width: wWidth, height: wHeight } = contentSize(this.windowElement())
-    const { height: tHeight } = this.titlebarElement().getBoundingClientRect()
-    const content = this.contentElement()
-    content.style.width = `${wWidth}px`
-    content.style.height = `${wHeight - tHeight}px`
-}
+        // const { width: wWidth, height: wHeight } = this.windowElement().getBoundingClientRect()
+        const { width: wWidth, height: wHeight } = contentSize(this.windowElement())
+        const { height: tHeight } = this.titlebarElement().getBoundingClientRect()
+        const content = this.contentElement()
+        content.style.width = `${wWidth}px`
+        content.style.height = `${wHeight - tHeight}px`
+    }
 }
 
 
@@ -236,3 +233,13 @@ function distance2(x1: number, y1: number, x2: number, y2: number) {
     const dy = y1 - y2
     return dx * dx + dy * dy
 }
+
+
+export function fixPosition() {
+    windows.forEach(w => {
+        w.fixPosition()
+    })
+}
+
+
+window.addEventListener('resize', e => fixPosition())
