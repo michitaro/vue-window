@@ -1,20 +1,13 @@
-<template>
-    <button @click="$emit('click')" :style="style" @mouseenter="hover = true" @mouseleave="hover = false" @mousedown.stop="mousedown" :disabled="disabled">
-        <slot/>
-    </button>
-</template>
-
-<script lang="ts">
-import { WindowStyle } from "./style"
+import { WindowStyle } from "../style"
 import { Component, Vue, Prop, Inject } from "vue-property-decorator"
 
 @Component
-export default class extends Vue {
+export class Button extends Vue {
     @Inject()
-    windowStyle: WindowStyle
+    windowStyle!: WindowStyle
 
     @Prop({ type: Boolean, default: false })
-    disabled: boolean
+    disabled!: boolean
 
     hover = false
     active = false
@@ -32,16 +25,3 @@ export default class extends Vue {
         document.addEventListener('mouseup', e => this.active = false)
     }
 }
-</script>
-
-
-<style lang="scss" scoped>
-button {
-    background-color: transparent;
-    border: none;
-    font-size: medium;
-    margin: 0;
-    padding: 0 0.25em;
-    border-radius: 4pt;
-}
-</style>

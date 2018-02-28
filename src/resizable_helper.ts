@@ -54,12 +54,12 @@ abstract class HandleBase {
         this.handle.parentElement!.removeChild(this.handle)
     }
 
-    protected x0: number
-    protected y0: number
-    protected left0: number
-    protected top0: number
-    protected width0: number
-    protected height0: number
+    protected x0!: number
+    protected y0!: number
+    protected left0!: number
+    protected top0!: number
+    protected width0!: number
+    protected height0!: number
 
     private mousedown = (e: MouseEvent) => {
         e.preventDefault()
@@ -76,14 +76,14 @@ abstract class HandleBase {
         document.addEventListener('mouseup', this.mouseup)
     }
 
-    private minLeft: number
-    private maxLeft: number
-    private minRight: number
-    private maxRight: number
-    private minTop: number
-    private maxTop: number
-    private minBottom: number
-    private maxBottom: number
+    private minLeft!: number
+    private maxLeft!: number
+    private minRight!: number
+    private maxRight!: number
+    private minTop!: number
+    private maxTop!: number
+    private minBottom!: number
+    private maxBottom!: number
 
     private calcSafeBoundaries() {
         const { left, top, right, bottom } = contentSize(this.container)

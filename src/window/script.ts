@@ -2,7 +2,7 @@ import { Vue, Component, Prop, Inject, Watch } from "vue-property-decorator"
 import { DraggableHelper } from "../draggable_helper"
 import { ResizableHelper } from "../resizable_helper"
 import { WindowStyle } from "../style"
-import MyButton from '../button.vue'
+import MyButton from '../button/index.vue'
 import { naturalSize, contentSize } from "../dom"
 import { ZElement } from "../z_element"
 import { windows } from '../windows';
@@ -16,38 +16,38 @@ const instances: WindowType[] = []
 })
 export class WindowType extends Vue {
     @Prop({ type: Boolean, default: true })
-    isOpen: boolean
+    isOpen!: boolean
 
     @Prop({ type: String, default: '' })
-    title: string
+    title!: string
 
     @Prop({ type: Boolean, default: false })
-    closeButton: boolean
+    closeButton!: boolean
 
     @Prop({ type: Boolean, default: false })
-    resizable: boolean
+    resizable!: boolean
 
     @Prop({ type: Boolean, default: false })
-    isScrollable: boolean
+    isScrollable!: boolean
 
     @Prop({ type: Boolean, default: true })
-    activateWhenOpen: boolean
+    activateWhenOpen!: boolean
 
     @Prop({ type: String, default: 'auto' })
-    initialPosition: string
+    initialPosition!: string
 
     @Prop({ type: Number, default: 0 })
-    zGroup: number
+    zGroup!: number
 
     @Inject()
-    windowStyle: WindowStyle
+    windowStyle!: WindowStyle
 
     private zIndex = 'auto'
 
-    draggableHelper: DraggableHelper
-    resizableHelper: ResizableHelper
+    draggableHelper!: DraggableHelper
+    resizableHelper!: ResizableHelper
 
-    zElement: ZElement
+    zElement!: ZElement
 
     mounted() {
         instances.push(this)
@@ -143,10 +143,10 @@ export class WindowType extends Vue {
     }
 
     @Prop({ type: Number, default: 0 })
-    minWidth: number
+    minWidth!: number
 
     @Prop({ type: Number, default: 0 })
-    minHeight: number
+    minHeight!: number
 
     @Prop({ type: Number })
     maxWidth?: number

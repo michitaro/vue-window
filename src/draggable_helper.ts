@@ -9,8 +9,8 @@ export class DraggableHelper {
         this.handle.classList.remove('draggable-handle')
     }
 
-    private offsetX: number
-    private offsetY: number
+    private offsetX!: number
+    private offsetY!: number
 
     private mousedown = (e: MouseEvent) => {
         // e.stopPropagation()

@@ -9,31 +9,32 @@
     "standalone/dist"
   ],
   "scripts": {
-    "prepublish": "webpack ; npm run standalone",
-    "example": "webpack --context example --config ./example/webpack.config.js",
-    "example-server": "webpack-dev-server --hot --progress --context example --config ./example/webpack.config.js",
-    "standalone": "webpack --context standalone --config ./standalone/webpack.config.js"
+    "prepare": "webpack --mode production ; npm run standalone",
+    "example": "webpack --context example --config ./example/webpack.config.js --mode development",
+    "example-server": "webpack-dev-server --hot --progress --context example --config ./example/webpack.config.js --mode development",
+    "standalone": "webpack --context standalone --config ./standalone/webpack.config.js --mode production"
   },
   "dependencies": {
-    "@hscmap/vue-menu": "^1.4.0",
-    "tslib": "^1.8.1",
+    "@hscmap/vue-menu": "^1.4.2",
+    "tslib": "^1.9.0",
     "vue": "^2.5.13",
-    "vue-class-component": "^6.1.2"
+    "vue-class-component": "^6.2.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.91",
-    "lodash": "^4.17.4",
-    "typescript": "^2.6.2",
-    "vue-loader": "^13.6.1",
-    "vue-property-decorator": "^6.0.0",
-    "vue-template-compiler": "^2.5.13",
-    "css-loader": "^0.28.7",
-    "file-loader": "^1.1.6",
+    "@types/lodash": "^4.14.104",
+    "css-loader": "^0.28.10",
+    "file-loader": "^1.1.10",
+    "lodash": "^4.17.5",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
-    "ts-loader": "^3.2.0",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "ts-loader": "^4.0.0",
+    "typescript": "^2.7.2",
+    "vue-loader": "^14.1.1",
+    "vue-property-decorator": "^6.0.0",
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.9",
+    "webpack-dev-server": "^3.1.0"
   },
   "keywords": [
     "Window",
