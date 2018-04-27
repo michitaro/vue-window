@@ -1,3 +1,5 @@
+const { VueLoaderPlugin } = require('vue-loader')
+
 module.exports = {
     entry: [
         "./src/index.ts",
@@ -13,10 +15,14 @@ module.exports = {
     module: {
         rules: [
             { test: /\.vue$/, use: 'vue-loader' },
+            { test: /\.scss/, use: ["style-loader", "css-loader", "sass-loader",] },
             { test: /\.ts$/, loader: 'ts-loader', options: { appendTsSuffixTo: [/\.vue$/] } }
         ],
     },
     externals: {
         vue: 'Vue'
-    }
+    },
+    plugins: [
+        new VueLoaderPlugin(),
+    ],
 }
