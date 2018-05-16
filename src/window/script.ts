@@ -177,7 +177,14 @@ export class WindowType extends Vue {
         const content = this.contentElement()
         content.style.width = `${wWidth}px`
         content.style.height = `${wHeight - tHeight}px`
+        const rect = this.titlebarElement().getBoundingClientRect()
+        this.$emit('resize', new WindowResizeEvent(rect.width, rect.height))
     }
+}
+
+
+export class WindowResizeEvent {
+    constructor(readonly width: number, readonly height: number) { }
 }
 
 
