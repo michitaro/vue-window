@@ -30,6 +30,9 @@ export class WindowType extends Vue {
     @Prop({ type: Boolean, default: false })
     isScrollable!: boolean
 
+    @Prop({ type: Number, default: 8 })
+    padding?: number
+
     @Prop({ type: Boolean, default: true })
     activateWhenOpen!: boolean
 
@@ -96,6 +99,8 @@ export class WindowType extends Vue {
 
         if (this.resizable) {
             style.padding = '0';
+        } else if (this.padding != undefined) {
+            style.padding = String(this.padding)
         }
 
         if (this.isScrollable) {
