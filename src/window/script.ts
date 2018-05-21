@@ -1,7 +1,7 @@
 import { Vue, Component, Prop, Inject, Watch } from "vue-property-decorator"
 import { DraggableHelper } from "../draggable_helper"
 import { ResizableHelper } from "../resizable_helper"
-import { WindowStyle, STYLE_KEY } from "../style"
+import { WindowStyle, WINDOW_STYLE_KEY } from "../style"
 import MyButton from '../button/index.vue'
 import { naturalSize, contentSize } from "../dom"
 import { ZElement } from "../z_element"
@@ -42,7 +42,7 @@ export class WindowType extends Vue {
     @Prop({ type: Number, default: 0 })
     zGroup!: number
 
-    @Inject(STYLE_KEY)
+    @Inject(WINDOW_STYLE_KEY)
     windowStyle!: WindowStyle
 
     private zIndex = 'auto'

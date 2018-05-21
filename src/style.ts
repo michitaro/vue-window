@@ -14,13 +14,13 @@ export interface WindowStyle {
 }
 
 
-export const STYLE_KEY = '@hscmap/vue-window/windowStyle'
+export const WINDOW_STYLE_KEY = '@hscmap/vue-window/windowStyle'
 
 
 export function StyleFactory(windowStyle: WindowStyle): vue.ComponentOptions<Vue> {
     return {
         provide() {
-            return { [STYLE_KEY]: windowStyle }
+            return { [WINDOW_STYLE_KEY]: windowStyle }
         },
         render(this: Vue, h: vue.CreateElement) {
             return h('div', this.$slots.default)

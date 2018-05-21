@@ -1,9 +1,9 @@
-import { WindowStyle, STYLE_KEY } from "../style"
+import { WindowStyle, WINDOW_STYLE_KEY } from "../style"
 import { Component, Vue, Prop, Inject } from "vue-property-decorator"
 
 @Component
 export class Button extends Vue {
-    @Inject(STYLE_KEY)
+    @Inject(WINDOW_STYLE_KEY)
     windowStyle!: WindowStyle
 
     @Prop({ type: Boolean, default: false })
