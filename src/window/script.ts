@@ -3,7 +3,7 @@ import { DraggableHelper } from "../draggable_helper"
 import { ResizableHelper } from "../resizable_helper"
 import { WindowStyle, WINDOW_STYLE_KEY } from "../style"
 import MyButton from '../button/index.vue'
-import { naturalSize, contentSize } from "../dom"
+import { naturalSize } from "../dom"
 import { ZElement } from "../z_element"
 import { windows } from '../windows';
 
@@ -37,7 +37,7 @@ export class WindowType extends Vue {
     activateWhenOpen!: boolean
 
     @Prop({ type: String, default: 'auto' })
-    initialPosition!: string
+    positionHint!: string
 
     @Prop({ type: Number, default: 0 })
     zGroup!: number
@@ -54,9 +54,9 @@ export class WindowType extends Vue {
 
     mounted() {
         instances.push(this)
-        this.isOpen && setPosition(this, this.initialPosition)
+        this.isOpen && setPosition(this, this.positionHint)
         this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.fixPosition())
-        this.setDimension()
+        this.setWindowSize(this.width, this.height)
         this.resizable && this.initResizeHelper()
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
         windows.add(this)
@@ -136,18 +136,33 @@ export class WindowType extends Vue {
     }
 
     @Prop({ type: Number })
-    initialWidth?: number
-
-    @Prop({ type: Number })
-    initialHeight?: number
-
-    private setDimension() {
-        const content = this.contentElement()
-        if (this.initialWidth != undefined) content.style.width = `${this.initialWidth}px`
-        if (this.initialHeight != undefined) content.style.height = `${this.initialHeight}px`
+    width?: number
+    @Watch('width')
+    onWidthChange(width: number) {
+        this.setWindowSize(width, undefined)
+        this.onWindowResize(false)
     }
 
-    @Prop({ type: Number, default: 0 })
+    @Prop({ type: Number })
+    height?: number
+    @Watch('height')
+    onHeightChange(height: number) {
+        this.setWindowSize(undefined, height)
+        this.onWindowResize(false)
+    }
+
+    private setWindowSize(width?: number, height?: number) {
+        const w = this.windowElement()
+        if (width !== undefined) {
+            w.style.width = `${width}px`
+        }
+        if (height !== undefined) {
+            const tHeight = this.titlebarElement().getBoundingClientRect().height
+            w.style.height = `${height + tHeight}px`
+        }
+    }
+
+    @Prop({ type: Number, default: 1 })
     minWidth!: number
 
     @Prop({ type: Number, default: 0 })
@@ -162,7 +177,7 @@ export class WindowType extends Vue {
     private initResizeHelper() {
         const { height: titlebarHeight } = naturalSize(this.titlebarElement())
         this.resizableHelper = new ResizableHelper(this.windowElement(), {
-            onResize: () => this.onResize(),
+            onResize: () => this.onWindowResize(),
             minWidth: this.minWidth,
             minHeight: this.minHeight + titlebarHeight,
             maxWidth: this.maxWidth,
@@ -170,15 +185,18 @@ export class WindowType extends Vue {
         })
     }
 
-    private onResize() {
-        // const { width: wWidth, height: wHeight } = this.windowElement().getBoundingClientRect()
-        const { width: wWidth, height: wHeight } = contentSize(this.windowElement())
+    private onWindowResize(emitUpdateEvent = true) {
+        const { width: wWidth, height: wHeight } = this.windowElement().getBoundingClientRect()
         const { height: tHeight } = this.titlebarElement().getBoundingClientRect()
         const content = this.contentElement()
+        const contentHeight = wHeight - tHeight
         content.style.width = `${wWidth}px`
-        content.style.height = `${wHeight - tHeight}px`
-        const rect = this.titlebarElement().getBoundingClientRect()
-        this.$emit('resize', new WindowResizeEvent(rect.width, rect.height))
+        content.style.height = `${contentHeight}px`
+        this.$emit('resize', new WindowResizeEvent(wWidth, contentHeight))
+        if (emitUpdateEvent) {
+            this.$emit('update:width', wWidth)
+            this.$emit('update:height', contentHeight)
+        }
     }
 }
 

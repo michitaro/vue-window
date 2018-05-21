@@ -1,28 +1,28 @@
 <template>
     <hsc-window-style-metal>
     
-        <hsc-window title="Center" initialPosition="center">
+        <hsc-window title="Center" positionHint="center">
             <fieldset>
                 <legend>&alpha;</legend>
                 <input type="range" />
             </fieldset>
         </hsc-window>
     
-        <hsc-window title="Right Bottom" initialPosition="-20 / -100">
+        <hsc-window title="Right Bottom" positionHint="-20 / -100">
             <fieldset>
                 <legend>&alpha;</legend>
                 <input type="range" />
             </fieldset>
         </hsc-window>
     
-        <hsc-window title="Bottom Left" initialPosition="20 / -200">
+        <hsc-window title="Bottom Left" positionHint="20 / -200">
             <fieldset>
                 <legend>&alpha;</legend>
                 <input type="range" />
             </fieldset>
         </hsc-window>
     
-        <hsc-window title="Top Right" initialPosition="-20 / 20">
+        <hsc-window title="Top Right" positionHint="-20 / 20">
             <fieldset>
                 <legend>&alpha;</legend>
                 <input type="range" />

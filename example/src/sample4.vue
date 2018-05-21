@@ -9,11 +9,20 @@
             <div class="radial-gradient-2"></div>
         </hsc-window>
 
-        <hsc-window title="initial{Width,Height}" :resizable="true" :initialWidth="200" :initialHeight="100">
+        <hsc-window title="width,height" :resizable="true" :width.sync="width" :height.sync="height">
             <div style="padding: 1em;">
                 <button>Cancel</button>
                 <button>OK</button>
+                <p>
+                    width={{width}}, height={{height}}
+                </p>
             </div>
+        </hsc-window>
+
+        <hsc-window title="width,height (sync)" :resizable="true" :width.sync="width" :height.sync="height">
+            <p style="padding: 1em;">
+                width={{width}}, height={{height}}
+            </p>
         </hsc-window>
 
         <hsc-window title="Scrollable" :resizable="true" :isScrollable="true" :minWidth="100" :minHeight="100" :maxWidth="200" :maxHeight="200">
@@ -37,29 +46,38 @@
 
 <style lang="scss" scoped>
 .radial-gradient-1 {
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(ellipse farthest-corner at 45px 45px, #00FFFF 0%, rgba(0, 0, 255, 0) 50%, #0000FF 95%);
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    ellipse farthest-corner at 45px 45px,
+    #00ffff 0%,
+    rgba(0, 0, 255, 0) 50%,
+    #0000ff 95%
+  );
 }
 
 .radial-gradient-2 {
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(farthest-corner at 45px 45px, #FF0000 0%, #0000FF 100%);
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    farthest-corner at 45px 45px,
+    #ff0000 0%,
+    #0000ff 100%
+  );
 }
 
 table {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 td {
-    text-align: center;
-    color: rgba(0, 0, 0, 0.25);
+  text-align: center;
+  color: rgba(0, 0, 0, 0.25);
 }
 
 th {
-    color: white;
-    background-color: #000
+  color: white;
+  background-color: #000;
 }
 </style>
 
@@ -69,7 +87,11 @@ import * as _ from 'lodash'
 
 export default <any>{
     data() {
-        return { n: 21 }
+        return {
+            n: 21,
+            width: 200,
+            height: 100,
+        }
     },
     methods: {
         range: _.range,
