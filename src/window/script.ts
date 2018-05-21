@@ -196,6 +196,7 @@ export class WindowType extends Vue {
         if (emitUpdateEvent) {
             this.$emit('update:width', wWidth)
             this.$emit('update:height', contentHeight)
+            fixPosition()
         }
     }
 }
