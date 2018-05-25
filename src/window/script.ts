@@ -1,14 +1,21 @@
-import { Vue, Component, Prop, Inject, Watch } from "vue-property-decorator"
-import { DraggableHelper } from "../draggable_helper"
-import { ResizableHelper } from "../resizable_helper"
-import { WindowStyle, WINDOW_STYLE_KEY } from "../style"
-import MyButton from '../button/index.vue'
-import { naturalSize } from "../dom"
-import { ZElement } from "../z_element"
+import { Component, Inject, Prop, Vue, Watch } from "vue-property-decorator";
+import { naturalSize } from "../dom";
+import { DraggableHelper } from "../draggable_helper";
+import { ResizableHelper } from "../resizable_helper";
+import { WINDOW_STYLE_KEY, WindowStyle } from "../style";
 import { windows } from '../windows';
-
+import { ZElement } from "../z_element";
+import MyButton from '../button/index.vue'
 
 const instances: WindowType[] = []
+
+
+interface Rect {
+    left: number
+    top: number
+    width: number
+    height: number
+}
 
 
 @Component({
@@ -54,11 +61,13 @@ export class WindowType extends Vue {
 
     mounted() {
         instances.push(this)
-        this.isOpen && setPosition(this, this.positionHint)
-        this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.fixPosition())
-        this.setWindowSize(this.width, this.height)
-        this.resizable && this.initResizeHelper()
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
+        setPosition(this, this.positionHint)
+        this.setWindowRect(this)
+        this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
+        this.resizable && this.initResizeHelper()
+        this.onWindowMove()
+        this.onWindowResize()
         windows.add(this)
     }
 
@@ -117,8 +126,10 @@ export class WindowType extends Vue {
 
     @Watch('isOpen')
     onIsOpenChange(isOpen: boolean) {
-        if (isOpen && this.activateWhenOpen)
-            this.activate()
+        if (isOpen) {
+            this.fixPosition()
+            this.activateWhenOpen && this.activate()
+        }
     }
 
     @Watch('zGroup')
@@ -136,10 +147,26 @@ export class WindowType extends Vue {
     }
 
     @Prop({ type: Number })
+    left?: number
+    @Watch('left')
+    onLeftChange(left: number) {
+        this.setWindowRect({ left })
+        this.onWindowMove(false)
+    }
+
+    @Prop({ type: Number })
+    top?: number
+    @Watch('top')
+    onTopChange(top: number) {
+        this.setWindowRect({ top })
+        this.onWindowMove(false)
+    }
+
+    @Prop({ type: Number })
     width?: number
     @Watch('width')
     onWidthChange(width: number) {
-        this.setWindowSize(width, undefined)
+        this.setWindowRect({ width })
         this.onWindowResize(false)
     }
 
@@ -147,18 +174,24 @@ export class WindowType extends Vue {
     height?: number
     @Watch('height')
     onHeightChange(height: number) {
-        this.setWindowSize(undefined, height)
+        this.setWindowRect({ height })
         this.onWindowResize(false)
     }
 
-    private setWindowSize(width?: number, height?: number) {
+    private setWindowRect({ width, height, top, left }: Partial<Rect>) {
         const w = this.windowElement()
-        if (width !== undefined) {
+        if (width != undefined) {
             w.style.width = `${width}px`
         }
-        if (height !== undefined) {
+        if (height != undefined) {
             const tHeight = this.titlebarElement().getBoundingClientRect().height
             w.style.height = `${height + tHeight}px`
+        }
+        if (left != undefined) {
+            w.style.left = `${left}px`
+        }
+        if (top != undefined) {
+            w.style.top = `${top}px`
         }
     }
 
@@ -186,19 +219,38 @@ export class WindowType extends Vue {
     }
 
     private onWindowResize(emitUpdateEvent = true) {
-        const { width: wWidth, height: wHeight } = this.windowElement().getBoundingClientRect()
-        const { height: tHeight } = this.titlebarElement().getBoundingClientRect()
-        const content = this.contentElement()
-        const contentHeight = wHeight - tHeight
-        content.style.width = `${wWidth}px`
-        content.style.height = `${contentHeight}px`
-        this.$emit('resize', new WindowResizeEvent(wWidth, contentHeight))
+        const w = this.windowElement()
+        const t = this.titlebarElement()
+        const c = this.contentElement()
+        const { width: wW, height: wH } = contentSize(w)
+        const tH = t.getBoundingClientRect().height
+        const cH = wH - tH
+        c.style.width = `${wW}px`
+        c.style.height = `${cH}px`
+        fixPosition()
+        this.$emit('resize', new WindowResizeEvent(wW, cH))
         if (emitUpdateEvent) {
-            this.$emit('update:width', wWidth)
-            this.$emit('update:height', contentHeight)
-            fixPosition()
+            this.$emit('update:width', wW)
+            this.$emit('update:height', cH)
         }
     }
+
+    private onWindowMove(emitUpdateEvent = true) {
+        fixPosition()
+        const { left, top } = this.windowElement().getBoundingClientRect()
+        if (emitUpdateEvent) {
+            this.$emit('update:left', left)
+            this.$emit('update:top', top)
+        }
+    }
+}
+
+
+function contentSize(el: HTMLElement) {
+    const style = window.getComputedStyle(el)
+    const width = parseFloat(style.width!) || 0
+    const height = parseFloat(style.height!) || 0
+    return { width, height }
 }
 
 
