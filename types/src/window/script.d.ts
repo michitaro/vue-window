@@ -11,7 +11,7 @@ export declare class WindowType extends Vue {
     isScrollable: boolean;
     padding?: number;
     activateWhenOpen: boolean;
-    initialPosition: string;
+    positionHint: string;
     zGroup: number;
     windowStyle: WindowStyle;
     private zIndex;
@@ -791,15 +791,22 @@ export declare class WindowType extends Vue {
     onIsOpenChange(isOpen: boolean): void;
     onZGroupChange(): void;
     fixPosition(): void;
-    initialWidth?: number;
-    initialHeight?: number;
-    private setDimension();
+    left?: number;
+    onLeftChange(left: number): void;
+    top?: number;
+    onTopChange(top: number): void;
+    width?: number;
+    onWidthChange(width: number): void;
+    height?: number;
+    onHeightChange(height: number): void;
+    private setWindowRect({width, height, top, left});
     minWidth: number;
     minHeight: number;
     maxWidth?: number;
     maxHeight?: number;
     private initResizeHelper();
-    private onResize();
+    private onWindowResize(emitUpdateEvent?);
+    private onWindowMove(emitUpdateEvent?);
 }
 export declare class WindowResizeEvent {
     readonly width: number;

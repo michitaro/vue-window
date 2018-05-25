@@ -8,7 +8,7 @@ export interface WindowStyle {
     buttonHover: Style;
     buttonActive: Style;
 }
-export declare const STYLE_KEY = "@hscmap/vue-window/windowStyle";
+export declare const WINDOW_STYLE_KEY = "@hscmap/vue-window/windowStyle";
 export declare function StyleFactory(windowStyle: WindowStyle): vue.ComponentOptions<Vue>;
 export declare const StyleBlack: vue.ComponentOptions<Vue>;
 export declare const StyleWhite: vue.ComponentOptions<Vue>;

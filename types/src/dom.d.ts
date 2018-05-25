@@ -6,7 +6,7 @@ export declare function naturalSize(el: HTMLElement): {
     bottom: number;
     right: number;
 };
-export declare function contentSize(el: HTMLElement): {
+export declare function getRect(el: HTMLElement): {
     width: number;
     height: number;
     top: number;
