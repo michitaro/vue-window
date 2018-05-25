@@ -109,7 +109,7 @@ export class WindowType extends Vue {
         if (this.resizable) {
             style.padding = '0';
         } else if (this.padding != undefined) {
-            style.padding = String(this.padding)
+            style.padding = `${this.padding}px`
         }
 
         if (this.isScrollable) {
@@ -222,16 +222,18 @@ export class WindowType extends Vue {
         const w = this.windowElement()
         const t = this.titlebarElement()
         const c = this.contentElement()
+        const { width: cW0, height: cH0 } = contentSize(c)
         const { width: wW, height: wH } = contentSize(w)
         const tH = t.getBoundingClientRect().height
-        const cH = wH - tH
-        c.style.width = `${wW}px`
-        c.style.height = `${cH}px`
+        const cW1 = wW - (c.offsetWidth - cW0)
+        const cH1 = (wH - tH - (c.offsetHeight - cH0))
+        c.style.width = `${cW1}px`
+        c.style.height = `${cH1}px`
         fixPosition()
-        this.$emit('resize', new WindowResizeEvent(wW, cH))
+        this.$emit('resize', new WindowResizeEvent(cW1, cH1))
         if (emitUpdateEvent) {
-            this.$emit('update:width', wW)
-            this.$emit('update:height', cH)
+            this.$emit('update:width', cW1)
+            this.$emit('update:height', cH1)
         }
     }
 
