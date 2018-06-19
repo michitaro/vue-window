@@ -407,6 +407,7 @@ export declare class WindowType extends Vue {
     };
     readonly styleTitlebar: Partial<CSSStyleDeclaration>;
     readonly styleContent: {
+        [x: number]: string | undefined;
         alignContent?: string | null | undefined;
         alignItems?: string | null | undefined;
         alignSelf?: string | null | undefined;
@@ -799,14 +800,14 @@ export declare class WindowType extends Vue {
     onWidthChange(width: number): void;
     height?: number;
     onHeightChange(height: number): void;
-    private setWindowRect({width, height, top, left});
+    private setWindowRect;
     minWidth: number;
     minHeight: number;
     maxWidth?: number;
     maxHeight?: number;
-    private initResizeHelper();
-    private onWindowResize(emitUpdateEvent?);
-    private onWindowMove(emitUpdateEvent?);
+    private initResizeHelper;
+    private onWindowResize;
+    private onWindowMove;
 }
 export declare class WindowResizeEvent {
     readonly width: number;

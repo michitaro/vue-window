@@ -6,5 +6,5 @@ export declare class ZElement {
     group: number;
     unregister(): void;
     raise(): void;
-    private a(cb);
+    private a;
 }
