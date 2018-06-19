@@ -67,7 +67,8 @@ export class WindowType extends Vue {
         this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
         this.resizable && this.initResizeHelper()
         this.onWindowMove()
-        this.onWindowResize()
+        if (this.resizable)
+            this.onWindowResize()
         windows.add(this)
     }
 
