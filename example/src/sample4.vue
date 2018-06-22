@@ -9,7 +9,7 @@
             <div class="radial-gradient-2"></div>
         </hsc-window>
 
-        <hsc-window title="width,height" :resizable="true" :width.sync="width" :height.sync="height">
+        <hsc-window title="width,height" :resizable="true" :width.sync="width" :height.sync="height" overflow="hidden">
             <div style="padding: 1em;">
                 <button>Cancel</button>
                 <button>OK</button>

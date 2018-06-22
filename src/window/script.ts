@@ -49,6 +49,9 @@ export class WindowType extends Vue {
     @Prop({ type: Number, default: 0 })
     zGroup!: number
 
+    @Prop({ default: 'visible' })
+    overflow!: string
+
     @Inject(WINDOW_STYLE_KEY)
     windowStyle!: WindowStyle
 
@@ -97,7 +100,7 @@ export class WindowType extends Vue {
     }
 
     get styleWindow() {
-        return { ...this.windowStyle.window, zIndex: this.zIndex }
+        return { ...this.windowStyle.window, zIndex: this.zIndex, overflow: this.overflow }
     }
 
     get styleTitlebar() {
