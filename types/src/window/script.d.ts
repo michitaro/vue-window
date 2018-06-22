@@ -13,6 +13,7 @@ export declare class WindowType extends Vue {
     activateWhenOpen: boolean;
     positionHint: string;
     zGroup: number;
+    overflow: string;
     windowStyle: WindowStyle;
     private zIndex;
     draggableHelper: DraggableHelper;
@@ -26,6 +27,7 @@ export declare class WindowType extends Vue {
     activate(): void;
     readonly styleWindow: {
         zIndex: string;
+        overflow: string;
         alignContent?: string | null | undefined;
         alignItems?: string | null | undefined;
         alignSelf?: string | null | undefined;
@@ -255,7 +257,6 @@ export declare class WindowType extends Vue {
         outlineOffset?: string | null | undefined;
         outlineStyle?: string | null | undefined;
         outlineWidth?: string | null | undefined;
-        overflow?: string | null | undefined;
         overflowX?: string | null | undefined;
         overflowY?: string | null | undefined;
         padding?: string | null | undefined;
