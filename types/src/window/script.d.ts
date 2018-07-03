@@ -790,6 +790,7 @@ export declare class WindowType extends Vue {
         setProperty?: ((propertyName: string, value: string | null, priority?: string | null | undefined) => void) | undefined;
     };
     onResizableChange(resizable: boolean): void;
+    private openCount;
     onIsOpenChange(isOpen: boolean): void;
     onZGroupChange(): void;
     fixPosition(): void;
@@ -809,6 +810,7 @@ export declare class WindowType extends Vue {
     private initResizeHelper;
     private onWindowResize;
     private onWindowMove;
+    closeButtonClick(): void;
 }
 export declare class WindowResizeEvent {
     readonly width: number;
