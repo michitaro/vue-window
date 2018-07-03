@@ -65,13 +65,9 @@ export class WindowType extends Vue {
     mounted() {
         instances.push(this)
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
-        setPosition(this, this.positionHint)
-        this.setWindowRect(this)
+        this.isOpen && this.onIsOpenChange(true)
         this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
         this.resizable && this.initResizeHelper()
-        this.onWindowMove()
-        if (this.resizable)
-            this.onWindowResize()
         windows.add(this)
     }
 
@@ -128,10 +124,19 @@ export class WindowType extends Vue {
         console.error("prop 'resizable' can't be changed")
     }
 
+    private openCount = 0
+
     @Watch('isOpen')
     onIsOpenChange(isOpen: boolean) {
         if (isOpen) {
-            this.fixPosition()
+            this.$nextTick(() => {
+                if (this.openCount++ == 0) {
+                    this.setWindowRect(this)
+                    setPosition(this, this.positionHint)
+                }
+                this.resizable && this.onWindowResize()
+                this.onWindowMove()
+            })
             this.activateWhenOpen && this.activate()
         }
     }
@@ -265,6 +270,16 @@ export class WindowResizeEvent {
 }
 
 
+function leftTop(w: WindowType) {
+    const el = w.windowElement()
+    const left = parseFloat(el.style.left || 'NaN')
+    const top = parseFloat(el.style.top || 'NaN')
+    if (!isNaN(left) && !isNaN(top))
+        return { left, top }
+    return null
+}
+
+
 // todo: cleanup
 function setPosition(w: WindowType, positionString: string) {
     const el = w.windowElement()
@@ -279,9 +294,12 @@ function setPosition(w: WindowType, positionString: string) {
                 let nTries = 0
                 do {
                     if (instances.every(j => {
-                        if (w == j)
+                        if (!j.isOpen || w == j)
                             return true
-                        const { left, top } = j.windowElement().getBoundingClientRect()
+                        const p = leftTop(j)
+                        if (p == null)
+                            return true
+                        const { left, top } = p
                         return distance2(left, top, x, y) > 16
                     })) {
                         break
