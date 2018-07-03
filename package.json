@@ -17,8 +17,8 @@
     "gh-pages": "npm run example && npm run standalone && cp standalone/dist/vue-window-standalone.js example/dist && gh-pages -d example/dist"
   },
   "dependencies": {
-    "@hscmap/vue-menu": "^2.3.0",
-    "tslib": "^1.9.1",
+    "@hscmap/vue-menu": "^2.3.2",
+    "tslib": "^1.9.3",
     "vue": "^2.5.16",
     "vue-class-component": "^6.2.0"
   },

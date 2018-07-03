@@ -49,9 +49,25 @@ function a(group: number) {
 }
 
 
+function compare(a: number, b: number): number {
+    if (a > b)
+        return - compare(b, a)
+    // always a <= b
+    if (a < 0) {
+        if (b >= 0)
+            return 1
+        return a - b
+    }
+    return a - b
+}
+// const arr = [ 4, 8, 6, -6, 3, -10, 6, 2, 6, 3, -7, -6, 9, 8, 3, -2, -3, -6, 8, -8 ]
+// arr.sort(compare)
+// arr => [ 2, 3, 3, 3, 4, 6, 6, 6, 8, 8, 8, 9, -10, -8, -7, -6, -6, -6, -3, -2 ]
+
+
 function refresh() {
     let zIndex = BASE
-    for (const g of keys(registry).sort()) {
+    for (const g of keys(registry).sort(compare)) {
         for (const z of a(g)) {
             if (zIndex != z.zIndex) {
                 z.zIndex = zIndex
