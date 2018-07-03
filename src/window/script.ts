@@ -254,6 +254,11 @@ export class WindowType extends Vue {
             this.$emit('update:top', top)
         }
     }
+
+    closeButtonClick() {
+        this.$emit('closebuttonclick')
+        this.$emit('update:isOpen', false)
+    }
 }
 
 

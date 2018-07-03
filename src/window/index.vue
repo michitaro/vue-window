@@ -9,7 +9,7 @@
                     <template v-else>{{title}}</template>
                 </div>
                 <template v-if="closeButton">
-                    <my-button @click="$emit('closebuttonclick')">&times;</my-button>
+                    <my-button @click="closeButtonClick">&times;</my-button>
                 </template>
             </div>
             <div class="content" :style="styleContent" ref="content">
