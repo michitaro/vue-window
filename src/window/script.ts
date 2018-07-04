@@ -57,8 +57,8 @@ export class WindowType extends Vue {
 
     private zIndex = 'auto'
 
-    draggableHelper!: DraggableHelper
-    resizableHelper!: ResizableHelper
+    draggableHelper?: DraggableHelper
+    resizableHelper?: ResizableHelper
 
     zElement!: ZElement
 
@@ -66,8 +66,6 @@ export class WindowType extends Vue {
         instances.push(this)
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
         this.isOpen && this.onIsOpenChange(true)
-        this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
-        this.resizable && this.initResizeHelper()
         windows.add(this)
     }
 
@@ -75,7 +73,7 @@ export class WindowType extends Vue {
         windows.delete(this)
         this.zElement.unregister()
         this.resizableHelper && this.resizableHelper.teardown()
-        this.draggableHelper.teardown()
+        this.draggableHelper && this.draggableHelper.teardown()
         instances.splice(instances.indexOf(this), 1)
     }
 
@@ -136,6 +134,8 @@ export class WindowType extends Vue {
                 }
                 this.resizable && this.onWindowResize()
                 this.onWindowMove()
+                this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
+                this.resizable && this.initResizeHelper()
             })
             this.activateWhenOpen && this.activate()
         }
