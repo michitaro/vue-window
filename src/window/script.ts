@@ -91,6 +91,7 @@ export class WindowType extends Vue {
 
     activate() {
         this.zElement.raise()
+        this.$emit('activate')
     }
 
     get styleWindow() {
