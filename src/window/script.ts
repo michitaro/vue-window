@@ -194,7 +194,7 @@ export class WindowType extends Vue {
             w.style.width = `${width}px`
         }
         if (height != undefined) {
-            const tHeight = this.titlebarElement().getBoundingClientRect().height
+            const tHeight = contentSize(this.titlebarElement()).height
             w.style.height = `${height + tHeight}px`
         }
         if (left != undefined) {
@@ -234,7 +234,8 @@ export class WindowType extends Vue {
         const c = this.contentElement()
         const { width: cW0, height: cH0 } = contentSize(c)
         const { width: wW, height: wH } = contentSize(w)
-        const tH = t.getBoundingClientRect().height
+        const tH = contentSize(t).height
+        eval('console.log({ cW0, cH0, wW, wH, tH })')
         const cW1 = wW - (c.offsetWidth - cW0)
         const cH1 = (wH - tH - (c.offsetHeight - cH0))
         c.style.width = `${cW1}px`
@@ -263,10 +264,15 @@ export class WindowType extends Vue {
 }
 
 
+function css2num(s: string | null) {
+    return s !== null ? parseFloat(s) : 0
+}
+
+
 function contentSize(el: HTMLElement) {
-    const style = window.getComputedStyle(el)
-    const width = parseFloat(style.width!) || 0
-    const height = parseFloat(style.height!) || 0
+    const s = window.getComputedStyle(el)
+    const width = Math.ceil([s.paddingLeft, s.width, s.paddingRight].map(css2num).reduce((a, b) => a + b))
+    const height = Math.ceil([s.paddingTop, s.height, s.paddingBottom].map(css2num).reduce((a, b) => a + b))
     return { width, height }
 }
 
