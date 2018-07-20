@@ -37,6 +37,10 @@ export class WindowType extends Vue {
     @Prop({ type: Boolean, default: true })
     maximizeButton!: boolean
 
+
+    @Prop({ type: Number, default: 0 })
+    maximizeOffset!: number
+
     @Prop({ type: Boolean, default: false })
     closeButton!: boolean
 
