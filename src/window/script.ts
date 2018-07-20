@@ -62,15 +62,20 @@ export class WindowType extends Vue {
     @Prop({ type: Number, default: 0 })
     zGroup!: number
 
+    @Prop({ default: 'visible' })
+    overflow!: string
+
     @Inject(WINDOW_STYLE_KEY)
     windowStyle!: WindowStyle
 
     private zIndex = 'auto'
 
+
     private lastRect !:Rect
 
     draggableHelper!: DraggableHelper
     resizableHelper!: ResizableHelper
+
 
     zElement!: ZElement
 
@@ -79,12 +84,7 @@ export class WindowType extends Vue {
     mounted() {
         instances.push(this)
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
-        setPosition(this, this.positionHint)
-        this.setWindowRect(this)
-        this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
-        this.resizable && this.initResizeHelper()
-        this.onWindowMove()
-        this.onWindowResize()
+        this.isOpen && this.onIsOpenChange(true)
         windows.add(this)
         if(this.maximized){
             this.maximizeSize()
@@ -99,7 +99,7 @@ export class WindowType extends Vue {
         windows.delete(this)
         this.zElement.unregister()
         this.resizableHelper && this.resizableHelper.teardown()
-        this.draggableHelper.teardown()
+        this.draggableHelper && this.draggableHelper.teardown()
         instances.splice(instances.indexOf(this), 1)
     }
 
@@ -117,6 +117,7 @@ export class WindowType extends Vue {
 
     activate() {
         this.zElement.raise()
+        this.$emit('activate')
     }
 
     maximizeWindow() {
@@ -168,7 +169,7 @@ export class WindowType extends Vue {
     }
 
     get styleWindow() {
-        return { ...this.windowStyle.window, zIndex: this.zIndex }
+        return { ...this.windowStyle.window, zIndex: this.zIndex, overflow: this.overflow }
     }
 
     get styleTitlebar() {
@@ -196,10 +197,21 @@ export class WindowType extends Vue {
         console.error("prop 'resizable' can't be changed")
     }
 
+    private openCount = 0
+
     @Watch('isOpen')
     onIsOpenChange(isOpen: boolean) {
         if (isOpen) {
-            this.fixPosition()
+            this.$nextTick(() => {
+                if (this.openCount++ == 0) {
+                    this.setWindowRect(this)
+                    setPosition(this, this.positionHint)
+                }
+                this.resizable && this.onWindowResize()
+                this.onWindowMove()
+                this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
+                this.resizable && this.initResizeHelper()
+            })
             this.activateWhenOpen && this.activate()
         }
     }
@@ -256,7 +268,7 @@ export class WindowType extends Vue {
             w.style.width = `${width}px`
         }
         if (height != undefined) {
-            const tHeight = this.titlebarElement().getBoundingClientRect().height
+            const tHeight = contentSize(this.titlebarElement()).height
             w.style.height = `${height + tHeight}px`
         }
         if (left != undefined) {
@@ -296,7 +308,7 @@ export class WindowType extends Vue {
         const c = this.contentElement()
         const { width: cW0, height: cH0 } = contentSize(c)
         const { width: wW, height: wH } = contentSize(w)
-        const tH = t.getBoundingClientRect().height
+        const tH = contentSize(t).height
         const cW1 = wW - (c.offsetWidth - cW0)
         const cH1 = (wH - tH - (c.offsetHeight - cH0))
         c.style.width = `${cW1}px`
@@ -329,6 +341,7 @@ export class WindowType extends Vue {
         }
     }
 
+
     private loadLastRect() {
         const w = this.windowElement()
         if(w.style.width != undefined && w.style.height != undefined && w.style.left != undefined && w.style.top != undefined){
@@ -340,19 +353,40 @@ export class WindowType extends Vue {
         }
 
     }
+
+    closeButtonClick() {
+        this.$emit('closebuttonclick')
+        this.$emit('update:isOpen', false)
+    }
+}
+
+
+function css2num(s: string | null) {
+    return s !== null ? parseFloat(s) : 0
+
 }
 
 
 function contentSize(el: HTMLElement) {
-    const style = window.getComputedStyle(el)
-    const width = parseFloat(style.width!) || 0
-    const height = parseFloat(style.height!) || 0
+    const s = window.getComputedStyle(el)
+    const width = Math.ceil([s.paddingLeft, s.width, s.paddingRight].map(css2num).reduce((a, b) => a + b))
+    const height = Math.ceil([s.paddingTop, s.height, s.paddingBottom].map(css2num).reduce((a, b) => a + b))
     return { width, height }
 }
 
 
 export class WindowResizeEvent {
     constructor(readonly width: number, readonly height: number) { }
+}
+
+
+function leftTop(w: WindowType) {
+    const el = w.windowElement()
+    const left = parseFloat(el.style.left || 'NaN')
+    const top = parseFloat(el.style.top || 'NaN')
+    if (!isNaN(left) && !isNaN(top))
+        return { left, top }
+    return null
 }
 
 
@@ -370,9 +404,12 @@ function setPosition(w: WindowType, positionString: string) {
                 let nTries = 0
                 do {
                     if (instances.every(j => {
-                        if (w == j)
+                        if (!j.isOpen || w == j)
                             return true
-                        const { left, top } = j.windowElement().getBoundingClientRect()
+                        const p = leftTop(j)
+                        if (p == null)
+                            return true
+                        const { left, top } = p
                         return distance2(left, top, x, y) > 16
                     })) {
                         break

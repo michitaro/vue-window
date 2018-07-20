@@ -1,7 +1,7 @@
 <template>
     <div>
         <component v-for="(style, name) in styles" :is="style" :key="name">
-            <hsc-window :title="name" :closeButton="true" :isOpen="isOpen[name]" @closebuttonclick="isOpen[name] = false">
+            <hsc-window :title="name" :closeButton="true" :isOpen.sync="isOpen[name]">
                 Parameters:
                 <fieldset>
                     <legend>&alpha;</legend>

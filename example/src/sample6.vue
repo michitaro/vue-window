@@ -13,7 +13,7 @@
         </hsc-menu-style-metal>
 
         <hsc-window-style-metal style="position: fixed; z-index: 1">
-            <hsc-window v-for="w of numberWindows" :key="w.id" :title="w.label" :closeButton="true" @closebuttonclick="w.isOpen=false" :isOpen="w.isOpen">
+            <hsc-window v-for="w of numberWindows" :key="w.id" :title="w.label" :closeButton="true" :isOpen.sync="w.isOpen">
                 <table>
                     <tr>
                         <th>N</th>

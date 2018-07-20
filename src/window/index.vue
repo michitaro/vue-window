@@ -1,5 +1,5 @@
 <template>
-    <transition name="fade" @after-leave="$emit('close')">
+    <transition name="fade" @after-leave="$emit('close')" @after-enter="$emit('open')">
         <div v-show="isOpen" class="window" :style="styleWindow" ref="window" @mousedown="activate">
             <div class="titlebar" :style="styleTitlebar" ref="titlebar">
                 <div class="title">
@@ -18,7 +18,7 @@
                     <my-button @click="maximizeWindow">&plus;</my-button>
                 </template>
                 <template v-if="closeButton">
-                    <my-button @click="$emit('closebuttonclick')">&times;</my-button>
+                    <my-button @click="closeButtonClick">&times;</my-button>
                 </template>
             </div>
             <div class="content" :style="styleContent" ref="content">
@@ -36,7 +36,6 @@ export default WindowType
 <style lang="scss" scoped>
 .window {
     display: flex;
-    overflow: hidden;
     flex-flow: column;
     position: absolute;
     border-radius: 4pt 4pt 0 0;
