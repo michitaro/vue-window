@@ -8,6 +8,15 @@
                     </template>
                     <template v-else>{{title}}</template>
                 </div>
+                <template v-if="maximizeButton">
+                    <my-button @click="minimizeWindow">&minus;</my-button>
+                </template>
+                <template v-if="maximizeButton && maximized">
+                    <my-button @click="maximizeWindow">&#128470;</my-button>
+                </template>
+                <template v-if="maximizeButton && !maximized">
+                    <my-button @click="maximizeWindow">&plus;</my-button>
+                </template>
                 <template v-if="closeButton">
                     <my-button @click="$emit('closebuttonclick')">&times;</my-button>
                 </template>
