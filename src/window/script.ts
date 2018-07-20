@@ -37,6 +37,10 @@ export class WindowType extends Vue {
     @Prop({ type: Boolean, default: true })
     maximizeButton!: boolean
 
+
+    @Prop({ type: Number, default: 0 })
+    maximizeOffset!: number
+
     @Prop({ type: Boolean, default: false })
     closeButton!: boolean
 
@@ -139,7 +143,7 @@ export class WindowType extends Vue {
         this.maximized = true;
         this.minimized = false;
         let rec = naturalSize(this.titlebarElement())
-        this.setWindowRect({width:window.innerWidth - 15,height:window.innerHeight - rec.height - 64,left:0,top:64})
+        this.setWindowRect({width:window.innerWidth - 15,height:window.innerHeight - rec.height - this.maximizeOffset ,left:0,top: this.maximizeOffset})
         this.onWindowResize(true)
         this.onWindowMove(false)
     }
