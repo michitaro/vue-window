@@ -69,7 +69,7 @@ export default <any>{
         return {
             isOpen1: true,
             isOpen2: false,
-            appendToBody: true
+            appendToBody: false
         }
     },
 }
