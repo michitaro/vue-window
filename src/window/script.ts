@@ -52,6 +52,9 @@ export class WindowType extends Vue {
     @Prop({ default: 'visible' })
     overflow!: string
 
+    @Prop({ type: Boolean, default: false })
+    appendToBody!: boolean
+
     @Inject(WINDOW_STYLE_KEY)
     windowStyle!: WindowStyle
 
@@ -67,6 +70,9 @@ export class WindowType extends Vue {
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
         this.isOpen && this.onIsOpenChange(true)
         windows.add(this)
+        if (this.appendToBody) {
+            document.body.appendChild(this.$el)
+        }
     }
 
     beforeDestroy() {
@@ -75,6 +81,10 @@ export class WindowType extends Vue {
         this.resizableHelper && this.resizableHelper.teardown()
         this.draggableHelper && this.draggableHelper.teardown()
         instances.splice(instances.indexOf(this), 1)
+        // if appendToBody is true, remove DOM node after destroy
+        if (this.appendToBody && this.$el && this.$el.parentNode) {
+            this.$el.parentNode.removeChild(this.$el)
+        }
     }
 
     windowElement() {
@@ -145,6 +155,17 @@ export class WindowType extends Vue {
     @Watch('zGroup')
     onZGroupChange() {
         this.zElement.group = this.zGroup
+    }
+
+    @Watch('appendToBody')
+    onAppendToBodyChange(appendToBody: boolean) {
+        if (appendToBody) {
+            document.body.appendChild(this.$el)
+        }
+
+        if (!appendToBody) {
+            this.$el.parentNode!.removeChild(this.$el)
+        }
     }
 
     fixPosition() {
