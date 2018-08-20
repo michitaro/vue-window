@@ -8,6 +8,7 @@ import Sample5 from "./sample5.vue"
 import Sample6 from "./sample6.vue"
 import Sample7 from "./sample7.vue"
 import Sample8 from "./sample8.vue"
+import Sample9 from "./sample9.vue"
 
 
 Vue.use(VueWindow)
@@ -22,7 +23,8 @@ window.addEventListener('load', e => {
         Sample5,
         Sample6,
         Sample7,
-        Sample8
+        Sample8,
+        Sample9
     } as any)[location.search.substr(1)] || Sample1
     new Vue({
         el: emptyElement(),

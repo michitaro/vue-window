@@ -1,6 +1,7 @@
 <template>
     <transition name="fade" @after-leave="$emit('close')" @after-enter="$emit('open')">
         <div v-show="isOpen" class="window" :style="styleWindow" ref="window" @mousedown="activate">
+
             <div class="titlebar" :style="styleTitlebar" ref="titlebar">
                 <div class="title">
                     <template v-if="$slots.title">
@@ -12,9 +13,15 @@
                     <my-button @click="closeButtonClick">&times;</my-button>
                 </template>
             </div>
+
             <div class="content" :style="styleContent" ref="content">
                 <slot/>
             </div>
+
+            <div class="footer" :style="styleFooter" v-if="$slots.footer" ref="footer">
+                <slot name="footer" />
+            </div>
+
         </div>
     </transition>
 </template>
@@ -55,6 +62,15 @@ export default WindowType
 
 .draggable-handle {
     cursor: move;
+}
+
+.footer {
+    display: flex;
+    flex-flow: row nowrap;
+    border-radius: 4pt 4pt 0 0;
+    font-family: sans-serif;
+    padding: .5em;
+    flex: 0 0 auto;
 }
 
 .fade-enter,
