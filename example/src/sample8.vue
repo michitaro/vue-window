@@ -31,7 +31,27 @@
                     title="Window 2"
                     :closeButton="true"
                     :isOpen.sync="isOpen2"
-                    :append-to-body="appendToBody">
+                    :append-to-body="false"
+                    :top="150"
+                    :left="100">
+                    Parameters:
+                    <fieldset>
+                        <legend>&alpha;</legend>
+                        <input type="range" />
+                    </fieldset>
+                    <fieldset>
+                        <legend>&beta;</legend>
+                        <input type="range" />
+                    </fieldset>
+                </hsc-window>
+
+                <hsc-window
+                    title="Window 3"
+                    :closeButton="true"
+                    :isOpen.sync="isOpen3"
+                    :append-to-body="true"
+                    :top="150"
+                    :left="100">
                     Parameters:
                     <fieldset>
                         <legend>&alpha;</legend>
@@ -45,17 +65,17 @@
 
             </hsc-window-style-metal>
 
-            <button @click="isOpen2 = ! isOpen2">Toggle Window 2 from sidebar</button>
+            <button
+                class="toggle-window-button"
+                @click="isOpen2 = ! isOpen2">
+                Toggle Window 2 (appendToBody = false)
+            </button>
 
-            <div style="margin-top: 30px;">
-                <label for="appendToBody">Append to body</label>
-                <input
-                    v-model="appendToBody"
-                    type="checkbox"
-                    name="Append to body"
-                    id="appendToBody"
-                />
-            </div>
+            <button
+                class="toggle-window-button"
+                @click="isOpen3 = ! isOpen3">
+                Toggle Window 3 (appendToBody = true)
+            </button>
 
         </div>
 
@@ -69,7 +89,7 @@ export default <any>{
         return {
             isOpen1: true,
             isOpen2: false,
-            appendToBody: false
+            isOpen3: false
         }
     },
 }
@@ -79,9 +99,12 @@ export default <any>{
 .side-bar {
   position: absolute;
   right: 0px;
-  width: 150px;
+  width: 300px;
   height: 85%;
   padding: 20px 20px;
   background-color: #d3d3d3;
+}
+.toggle-window-button {
+  margin-top: 30px;
 }
 </style>

@@ -149,23 +149,15 @@ export class WindowType extends Vue {
                 this.resizable && this.initResizeHelper()
             })
             this.activateWhenOpen && this.activate()
+            if (this.appendToBody) {
+                document.body.appendChild(this.$el)
+            }
         }
     }
 
     @Watch('zGroup')
     onZGroupChange() {
         this.zElement.group = this.zGroup
-    }
-
-    @Watch('appendToBody')
-    onAppendToBodyChange(appendToBody: boolean) {
-        if (appendToBody) {
-            document.body.appendChild(this.$el)
-        }
-
-        if (!appendToBody) {
-            this.$el.parentNode!.removeChild(this.$el)
-        }
     }
 
     fixPosition() {
