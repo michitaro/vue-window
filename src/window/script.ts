@@ -159,6 +159,11 @@ export class WindowType extends Vue {
         console.error("prop 'resizable' can't be changed")
     }
 
+    @Watch('appendToBody')
+    onAppendToBodyChange(appendToBody: boolean) {
+        console.error("prop 'appendToBody' can't be changed")
+    }
+
     private openCount = 0
 
     @Watch('isOpen')
