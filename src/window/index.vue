@@ -10,21 +10,40 @@
                     <template v-else>{{title}}</template>
                 </div>
                 <template v-if="collapseButton">
+
                     <my-button
-                        v-if="isCollapsed"
-                        style="transform: rotate(180deg);"
                         @click="collapseButtonClick">
-                        &#10148;
+
+                        <slot v-if="isCollapsed" name="expandButtonIcon" />
+
+                        <div
+                            v-if="!$slots.expandButtonIcon && isCollapsed"
+                            style="transform: rotate(180deg); font-size: 11px;">
+                            &#9658;
+                        </div>
+
+                        <slot v-if="!isCollapsed" name="collapseButtonIcon" />
+
+                        <div
+                            v-if="!$slots.collapseButtonIcon && !isCollapsed"
+                            style="transform: rotate(90deg); font-size: 11px;">
+                            &#9658;
+                        </div>
+
                     </my-button>
-                    <my-button
-                        v-if="!isCollapsed"
-                        style="transform: rotate(90deg);"
-                        @click="collapseButtonClick">
-                        &#10148;
-                    </my-button>
+
                 </template>
+
                 <template v-if="closeButton">
-                    <my-button @click="closeButtonClick">&times;</my-button>
+
+                    <my-button
+                        @click="closeButtonClick">
+
+                        <slot name="closeButtonIcon" />
+
+                        <span v-if="!$slots.closeButtonIcon">&times;</span>
+                    </my-button>
+
                 </template>
             </div>
 
@@ -67,6 +86,7 @@ export default WindowType
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-right: 7px;
 }
 
 .content {

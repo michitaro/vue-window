@@ -22,6 +22,10 @@
             <div slot="footer">
               <button @click="isOpen = false">Close</button>
             </div>
+
+            <!-- <span slot="expandButtonIcon">&lt;</span>
+            <span slot="collapseButtonIcon">v</span>
+            <span slot="closeButtonIcon">x</span> -->
         </hsc-window>
 
         <button @click="isOpen = ! isOpen">Toggle Window 1</button>
