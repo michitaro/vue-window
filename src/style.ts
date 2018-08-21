@@ -8,6 +8,7 @@ export interface WindowStyle {
     window: Style,
     titlebar: Style,
     content: Style,
+    footer: Style,
     button: Style,
     buttonHover: Style,
     buttonActive: Style,
@@ -40,6 +41,9 @@ export const StyleBlack: vue.ComponentOptions<Vue> = StyleFactory({
     },
     content: {
     },
+    footer: {
+        backgroundColor: 'rgba(63, 63, 63, 0.9)'
+    },
     button: {
         color: 'white'
     },
@@ -64,6 +68,9 @@ export const StyleWhite: vue.ComponentOptions<Vue> = StyleFactory({
     },
     content: {
     },
+    footer: {
+        backgroundColor: 'rgba(191, 191, 191, 0.9)'
+    },
     button: {
         color: '#000'
     },
@@ -87,6 +94,9 @@ export const StyleMetal: vue.ComponentOptions<Vue> = StyleFactory({
         background: 'linear-gradient(to bottom, rgb(215, 215, 215), rgb(191, 191, 191))'
     },
     content: {
+    },
+    footer: {
+        background: 'linear-gradient(to top, rgb(215, 215, 215), rgb(191, 191, 191))'
     },
     button: {
         color: '#000'

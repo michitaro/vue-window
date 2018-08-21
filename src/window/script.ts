@@ -133,8 +133,7 @@ export class WindowType extends Vue {
     }
 
     get styleFooter() {
-        // TODO: make separate style for this
-        return this.windowStyle.titlebar
+        return this.windowStyle.footer
     }
 
     @Watch('resizable')

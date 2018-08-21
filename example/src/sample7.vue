@@ -24,6 +24,20 @@ import * as _ from 'lodash'
 
 
 const StyleBluegreen = StyleFactory({
+    window: {
+        border: '1px solid #f00',
+        color: 'white',
+        boxShadow: '0 2pt 8pt rgba(0, 0, 0, 0.5)'
+    },
+    titlebar: {
+        background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.25), #436f7c)'
+    },
+    content: {
+        backgroundColor: 'rgba(37, 61, 91, 0.8)'
+    },
+    footer: {
+        background: 'linear-gradient(to top, rgba(0, 0, 0, 0.25), #436f7c)'
+    },
     button: {
         color: 'red'
     },
@@ -32,19 +46,7 @@ const StyleBluegreen = StyleFactory({
     },
     buttonHover: {
         backgroundColor: 'rgba(255, 0, 0, 0.8)'
-    },
-    content: {
-        backgroundColor: 'rgba(37, 61, 91, 0.8)'
-    },
-    titlebar: {
-        background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.25), #436f7c)'
-    },
-
-    window: {
-        border: '1px solid #f00',
-        color: 'white',
-        boxShadow: '0 2pt 8pt rgba(0, 0, 0, 0.5)'
-    },
+    }
 })
 
 
