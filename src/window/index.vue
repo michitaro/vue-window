@@ -28,11 +28,11 @@
                 </template>
             </div>
 
-            <div class="content" :style="styleContent" ref="content">
-                <slot/>
+            <div v-if="!isCollapsed" class="content" :style="styleContent" ref="content">
+                <slot />
             </div>
 
-            <div class="footer" :style="styleFooter" v-if="$slots.footer" ref="footer">
+            <div v-if="$slots.footer && !isCollapsed" class="footer" :style="styleFooter" ref="footer">
                 <slot name="footer" />
             </div>
 

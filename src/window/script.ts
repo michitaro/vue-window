@@ -17,7 +17,6 @@ interface Rect {
     height: number
 }
 
-
 @Component({
     components: { MyButton }
 })
@@ -70,6 +69,7 @@ export class WindowType extends Vue {
     resizableHelper?: ResizableHelper
 
     zElement!: ZElement
+    beforeCollapse!: any
 
     mounted() {
         instances.push(this)
@@ -79,6 +79,9 @@ export class WindowType extends Vue {
         if (this.appendToBody) {
             document.body.appendChild(this.$el)
         }
+
+        const { width, height } = this.windowElement().getBoundingClientRect()
+        this.beforeCollapse = { width: `${width}px`, height: `${height}px` }
     }
 
     beforeDestroy() {
@@ -277,6 +280,7 @@ export class WindowType extends Vue {
         const cH1 = (wH - tH - fH - (c.offsetHeight - cH0))
         c.style.width = `${cW1}px`
         c.style.height = `${cH1}px`
+
         fixPosition()
         this.$emit('resize', new WindowResizeEvent(cW1, cH1))
         if (emitUpdateEvent) {
@@ -302,16 +306,29 @@ export class WindowType extends Vue {
     collapseButtonClick() {
         this.$emit('collapsebuttonClick')
 
+        const window = this.windowElement()
+
         if (this.isCollapsed) {
           this.resizable && this.initResizeHelper()
+
+          // Recover previous dimensions
+          window.style.width = this.beforeCollapse.width
+          window.style.height = this.beforeCollapse.height
         }
 
         if (!this.isCollapsed) {
           this.resizableHelper && this.resizableHelper.teardown()
+
+          // Store current dimensions
+          this.beforeCollapse = { width: window.style.width, height: window.style.height }
+
+          // Set titlebar dimensions as new dimensions
+          const titlebar = this.titlebarElement()
+          window.style.width = titlebar.style.width
+          window.style.height = titlebar.style.height
         }
 
         this.$emit('update:isCollapsed', !this.isCollapsed)
-        this.$nextTick(() => { console.log(this.isCollapsed) })
     }
 }
 
