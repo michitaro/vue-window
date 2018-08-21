@@ -25,11 +25,17 @@ export class WindowType extends Vue {
     @Prop({ type: Boolean, default: true })
     isOpen!: boolean
 
+    @Prop({ type: Boolean, default: false })
+    isCollapsed!: boolean
+
     @Prop({ type: String, default: '' })
     title!: string
 
     @Prop({ type: Boolean, default: false })
     closeButton!: boolean
+
+    @Prop({ type: Boolean, default: false })
+    collapseButton!: boolean
 
     @Prop({ type: Boolean, default: false })
     resizable!: boolean
@@ -291,6 +297,12 @@ export class WindowType extends Vue {
     closeButtonClick() {
         this.$emit('closebuttonclick')
         this.$emit('update:isOpen', false)
+    }
+
+    collapseButtonClick() {
+        this.$emit('collapsebuttonClick')
+        this.$emit('update:isCollapsed', !this.isCollapsed)
+        this.$nextTick(() => { console.log(this.isCollapsed) })
     }
 }
 

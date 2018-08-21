@@ -9,6 +9,20 @@
                     </template>
                     <template v-else>{{title}}</template>
                 </div>
+                <template v-if="collapseButton">
+                    <my-button
+                        v-if="isCollapsed"
+                        style="transform: rotate(180deg);"
+                        @click="collapseButtonClick">
+                        &#10148;
+                    </my-button>
+                    <my-button
+                        v-if="!isCollapsed"
+                        style="transform: rotate(90deg);"
+                        @click="collapseButtonClick">
+                        &#10148;
+                    </my-button>
+                </template>
                 <template v-if="closeButton">
                     <my-button @click="closeButtonClick">&times;</my-button>
                 </template>
