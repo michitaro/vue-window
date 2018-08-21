@@ -248,7 +248,7 @@ export class WindowType extends Vue {
     }
 
     private onWindowMove(emitUpdateEvent = true) {
-        fixPosition()
+        this.fixPosition()
         const { left, top } = this.windowElement().getBoundingClientRect()
         if (emitUpdateEvent) {
             this.$emit('update:left', left)
