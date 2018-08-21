@@ -6,6 +6,7 @@
             :closeButton="true"
             :collapseButton="true"
             :resizable="true"
+            overflow="hidden"
             :isOpen.sync="isOpen"
             :isCollapsed.sync="isCollapsed">
             Parameters:
@@ -33,7 +34,7 @@ export default <any>{
     data() {
         return {
             isOpen: true,
-            isCollapsed: false
+            isCollapsed: true
         }
     },
 }
