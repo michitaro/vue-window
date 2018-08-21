@@ -301,6 +301,15 @@ export class WindowType extends Vue {
 
     collapseButtonClick() {
         this.$emit('collapsebuttonClick')
+
+        if (this.isCollapsed) {
+          this.resizable && this.initResizeHelper()
+        }
+
+        if (!this.isCollapsed) {
+          this.resizableHelper && this.resizableHelper.teardown()
+        }
+
         this.$emit('update:isCollapsed', !this.isCollapsed)
         this.$nextTick(() => { console.log(this.isCollapsed) })
     }
