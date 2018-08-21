@@ -259,7 +259,15 @@ export class WindowType extends Vue {
         const { width: cW0, height: cH0 } = contentSize(c)
         const { width: wW, height: wH } = contentSize(w)
         const tH = contentSize(t).height
-        const fH = contentSize(f).height
+
+        let fH
+
+        if (f) {
+          fH = contentSize(f).height
+        } else {
+          fH = 0
+        }
+
         const cW1 = wW - (c.offsetWidth - cW0)
         const cH1 = (wH - tH - fH - (c.offsetHeight - cH0))
         c.style.width = `${cW1}px`
