@@ -2,3 +2,4 @@
 /lib
 /standalone/dist
 .DS_Store
+yarn.lock

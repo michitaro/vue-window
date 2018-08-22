@@ -17,7 +17,6 @@ interface Rect {
     height: number
 }
 
-
 @Component({
     components: { MyButton }
 })
@@ -25,11 +24,17 @@ export class WindowType extends Vue {
     @Prop({ type: Boolean, default: true })
     isOpen!: boolean
 
+    @Prop({ type: Boolean, default: false })
+    isCollapsed!: boolean
+
     @Prop({ type: String, default: '' })
     title!: string
 
     @Prop({ type: Boolean, default: false })
     closeButton!: boolean
+
+    @Prop({ type: Boolean, default: false })
+    collapseButton!: boolean
 
     @Prop({ type: Boolean, default: false })
     resizable!: boolean
@@ -52,6 +57,9 @@ export class WindowType extends Vue {
     @Prop({ default: 'visible' })
     overflow!: string
 
+    @Prop({ type: Boolean, default: false })
+    appendToBody!: boolean
+
     @Inject(WINDOW_STYLE_KEY)
     windowStyle!: WindowStyle
 
@@ -61,12 +69,28 @@ export class WindowType extends Vue {
     resizableHelper?: ResizableHelper
 
     zElement!: ZElement
+    beforeCollapse!: any
 
     mounted() {
         instances.push(this)
         this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
         this.isOpen && this.onIsOpenChange(true)
         windows.add(this)
+        if (this.appendToBody) {
+            document.body.appendChild(this.$el)
+        }
+
+        if (!this.isCollapsed) {
+            const { width, height } = this.windowElement().getBoundingClientRect()
+            this.beforeCollapse = { width: `${width}px`, height: `${height}px` }
+        } else {
+            this.$emit('update:isCollapsed', false)
+            this.$nextTick(() => {
+              const { width, height } = this.windowElement().getBoundingClientRect()
+              this.beforeCollapse = { width: `${width}px`, height: `${height}px` }
+              this.collapseButtonClick()
+            })
+        }
     }
 
     beforeDestroy() {
@@ -75,6 +99,10 @@ export class WindowType extends Vue {
         this.resizableHelper && this.resizableHelper.teardown()
         this.draggableHelper && this.draggableHelper.teardown()
         instances.splice(instances.indexOf(this), 1)
+        // if appendToBody is true, remove DOM node after destroy
+        if (this.appendToBody && this.$el && this.$el.parentNode) {
+            this.$el.parentNode.removeChild(this.$el)
+        }
     }
 
     windowElement() {
@@ -87,6 +115,10 @@ export class WindowType extends Vue {
 
     contentElement() {
         return this.$refs.content as HTMLElement
+    }
+
+    footerElement() {
+        return this.$refs.footer as HTMLElement
     }
 
     activate() {
@@ -118,9 +150,18 @@ export class WindowType extends Vue {
         return style;
     }
 
+    get styleFooter() {
+        return this.windowStyle.footer
+    }
+
     @Watch('resizable')
     onResizableChange(resizable: boolean) {
         console.error("prop 'resizable' can't be changed")
+    }
+
+    @Watch('appendToBody')
+    onAppendToBodyChange(appendToBody: boolean) {
+        console.error("prop 'appendToBody' can't be changed")
     }
 
     private openCount = 0
@@ -133,12 +174,19 @@ export class WindowType extends Vue {
                     this.setWindowRect(this)
                     setPosition(this, this.positionHint)
                 }
-                this.resizable && this.onWindowResize()
+                if (!this.isCollapsed) {
+                    this.resizable && this.onWindowResize()
+                }
                 this.onWindowMove()
                 this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
-                this.resizable && this.initResizeHelper()
+                if (!this.isCollapsed) {
+                    this.resizable && this.initResizeHelper()
+                }
             })
             this.activateWhenOpen && this.activate()
+            if (this.appendToBody) {
+                document.body.appendChild(this.$el)
+            }
         }
     }
 
@@ -231,14 +279,26 @@ export class WindowType extends Vue {
     private onWindowResize(emitUpdateEvent = true) {
         const w = this.windowElement()
         const t = this.titlebarElement()
+        const f = this.footerElement()
         const c = this.contentElement()
+
         const { width: cW0, height: cH0 } = contentSize(c)
         const { width: wW, height: wH } = contentSize(w)
         const tH = contentSize(t).height
+
+        let fH
+
+        if (f) {
+          fH = contentSize(f).height
+        } else {
+          fH = 0
+        }
+
         const cW1 = wW - (c.offsetWidth - cW0)
-        const cH1 = (wH - tH - (c.offsetHeight - cH0))
+        const cH1 = (wH - tH - fH - (c.offsetHeight - cH0))
         c.style.width = `${cW1}px`
         c.style.height = `${cH1}px`
+
         fixPosition()
         this.$emit('resize', new WindowResizeEvent(cW1, cH1))
         if (emitUpdateEvent) {
@@ -259,6 +319,39 @@ export class WindowType extends Vue {
     closeButtonClick() {
         this.$emit('closebuttonclick')
         this.$emit('update:isOpen', false)
+    }
+
+    collapseButtonClick() {
+        this.$emit('collapsebuttonClick')
+
+        const window = this.windowElement()
+
+        this.$emit('update:isCollapsed', !this.isCollapsed)
+        this.$nextTick(() => {
+            if (!this.isCollapsed) {
+              this.resizable && this.initResizeHelper()
+
+              // Recover previous dimensions
+              window.style.width = this.beforeCollapse.width
+              window.style.height = this.beforeCollapse.height
+
+              this.$nextTick(() => {
+                this.onWindowResize(false)
+              })
+            }
+
+            if (this.isCollapsed) {
+              this.resizableHelper && this.resizableHelper.teardown()
+
+              // Store current dimensions
+              this.beforeCollapse = { width: window.style.width, height: window.style.height }
+
+              // Set titlebar dimensions as new dimensions
+              const titlebar = this.titlebarElement()
+              window.style.width = titlebar.style.width
+              window.style.height = titlebar.style.height
+            }
+        })
     }
 }
 
