@@ -5,8 +5,14 @@ import Vue from 'vue'
 export { WindowType, WindowResizeEvent, fixPosition } from "./window/script"
 export { StyleBlack, StyleWhite, StyleMetal, StyleFactory }
 
-export function install(vue: typeof Vue, options = { prefix: 'hsc-window' }) {
+let BASE = 0
+
+export function install(vue: typeof Vue, options = {
+  prefix: 'hsc-window',
+  zIndexBase: 0
+}) {
     const { prefix } = options
+    BASE = options.zIndexBase
     vue.component(`${prefix}`, MyWindow)
     vue.component(`${prefix}-style-black`, StyleBlack)
     vue.component(`${prefix}-style-white`, StyleWhite)
@@ -14,3 +20,5 @@ export function install(vue: typeof Vue, options = { prefix: 'hsc-window' }) {
 }
 
 export { windows } from "./windows"
+
+export { BASE }

@@ -1,3 +1,5 @@
+import { BASE } from "./index"
+
 export class ZElement {
     zIndex?: number
 
@@ -39,7 +41,7 @@ export class ZElement {
 const registry = new Map<number, ZElement[]>()
 
 
-const BASE = 0
+// const BASE = 0
 
 
 function a(group: number) {
