@@ -135,7 +135,11 @@ export class WindowType extends Vue {
                 }
                 this.resizable && this.onWindowResize()
                 this.onWindowMove()
-                this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), () => this.onWindowMove())
+                this.draggableHelper = new DraggableHelper(this.titlebarElement(), this.windowElement(), {
+                    onMove: () => this.onWindowMove(),
+                    onMoveStart: () => this.$emit('move-start'),
+                    onMoveEnd: () => this.$emit('move-end'),
+                })
                 this.resizable && this.initResizeHelper()
             })
             this.activateWhenOpen && this.activate()
@@ -221,6 +225,8 @@ export class WindowType extends Vue {
         const { height: titlebarHeight } = naturalSize(this.titlebarElement())
         this.resizableHelper = new ResizableHelper(this.windowElement(), {
             onResize: () => this.onWindowResize(),
+            onResizeStart: () => this.$emit('resize-start'),
+            onResizeEnd: () => this.$emit('resize-end'),
             minWidth: this.minWidth,
             minHeight: this.minHeight + titlebarHeight,
             maxWidth: this.maxWidth,

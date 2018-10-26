@@ -25,6 +25,10 @@
             </p>
         </hsc-window>
 
+        <hsc-window title="iframe" :resizable="true" @resize-start="blockPointerEvents = true" @resize-end="blockPointerEvents = false" @move-start="blockPointerEvents = true" @move-end="blockPointerEvents = false">
+            <iframe :class="{ blockPointerEvents }" :src="`data:text/html;base64,${iframeSrc}`" style="width: 100%; height: 100%; box-sizing: border-box; border-style: none;" />
+        </hsc-window>
+
         <hsc-window title="Scrollable" :resizable="true" :isScrollable="true" :minWidth="100" :minHeight="100" :maxWidth="200" :maxHeight="200">
             <table>
                 <tr>
@@ -79,11 +83,16 @@ th {
   color: white;
   background-color: #000;
 }
+
+.blockPointerEvents {
+  pointer-events: none;
+}
 </style>
 
 
 <script lang="ts">
 import * as _ from 'lodash'
+import { Base64 } from 'js-base64'
 
 export default <any>{
     data() {
@@ -91,6 +100,7 @@ export default <any>{
             n: 21,
             width: 200,
             height: 100,
+            blockPointerEvents: false,
         }
     },
     methods: {
@@ -100,6 +110,13 @@ export default <any>{
             if (hex.length <= 1)
                 hex = `0${hex}`
             return hex
+        },
+    },
+    computed: {
+        iframeSrc() {
+            return Base64.encode(`
+                <h1>iframe</h1>
+            `)
         }
     }
 }
