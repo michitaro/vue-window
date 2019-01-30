@@ -1,6 +1,6 @@
 {
   "name": "@hscmap/vue-window",
-  "version": "2.2.7",
+  "version": "2.3.0",
   "description": "Vue component for window",
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",
