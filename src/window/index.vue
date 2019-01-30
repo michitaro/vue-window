@@ -1,6 +1,6 @@
 <template>
     <transition name="fade" @after-leave="$emit('close')" @after-enter="$emit('open')">
-        <div v-show="isOpen" class="window" :style="styleWindow" ref="window" @mousedown="activate">
+        <div v-show="isOpen" class="window" :style="styleWindow" ref="window" @mousedown="activate" @touchstart="activate">
             <div class="titlebar" :style="styleTitlebar" ref="titlebar">
                 <div class="title">
                     <template v-if="$slots.title">

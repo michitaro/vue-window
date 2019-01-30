@@ -1,7 +1,7 @@
 <template>
-    <button @click="$emit('click')" :style="style" @mouseenter="hover = true" @mouseleave="hover = false" @mousedown.stop="mousedown" :disabled="disabled">
+    <div class="button" :style="style" @mouseenter="hover = true" @mouseleave="hover = false" @mousedown.stop="mousedown" @touchstart.stop="mousedown" @mouseup="mouseup" @touchend="mouseup" :disabled="disabled">
         <slot/>
-    </button>
+    </div>
 </template>
 
 <script lang="ts">
@@ -11,7 +11,7 @@ export default Button
 
 
 <style lang="scss" scoped>
-button {
+.button {
     background-color: transparent;
     border: none;
     font-size: medium;

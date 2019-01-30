@@ -1,5 +1,6 @@
 import { WindowStyle, WINDOW_STYLE_KEY } from "../style"
 import { Component, Vue, Prop, Inject } from "vue-property-decorator"
+import { SinglePointerEvent } from '../SinglePointerEvent';
 
 @Component
 export class Button extends Vue {
@@ -19,9 +20,18 @@ export class Button extends Vue {
         return s
     }
 
-    mousedown(e: MouseEvent) {
+    mousedown(e: MouseEvent & TouchEvent) {
         e.preventDefault()
         this.active = true
-        document.addEventListener('mouseup', e => this.active = false)
+        const unbindUp = SinglePointerEvent.bindUp(document, () => {
+            this.active = false
+            unbindUp()
+        })
+    }
+
+    mouseup(e: MouseEvent & TouchEvent) {
+        if (this.active) {
+            this.$emit('click')
+        }
     }
 }
