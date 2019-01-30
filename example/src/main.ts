@@ -13,26 +13,26 @@ Vue.use(VueWindow)
 
 
 window.addEventListener('load', e => {
-    const Sample: vue.Component = ({
-        Sample1,
-        Sample2,
-        Sample3,
-        Sample4,
-        Sample5,
-        Sample6,
-        Sample7,
-    } as any)[location.search.substr(1)] || Sample1
-    new Vue({
-        el: emptyElement(),
-        render(h: vue.CreateElement) {
-            return h(Sample)
-        }
-    })
+  const Sample: vue.Component = ({
+    Sample1,
+    Sample2,
+    Sample3,
+    Sample4,
+    Sample5,
+    Sample6,
+    Sample7,
+  } as any)[location.search.substr(1)] || Sample1
+  new Vue({
+    el: emptyElement(),
+    render(h: vue.CreateElement) {
+      return h(Sample)
+    }
+  })
 })
 
 
 function emptyElement() {
-    const div = document.createElement('div')
-    document.body.appendChild(div)
-    return div
+  const div = document.createElement('div')
+  document.body.appendChild(div)
+  return div
 }

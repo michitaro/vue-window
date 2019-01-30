@@ -6,11 +6,11 @@ export { WindowResizeEvent, fixPosition } from "./window/script"
 export { StyleBlack, StyleWhite, StyleMetal, StyleFactory }
 
 export function install(vue: typeof Vue, options = { prefix: 'hsc-window' }) {
-    const { prefix } = options
-    vue.component(`${prefix}`, MyWindow)
-    vue.component(`${prefix}-style-black`, StyleBlack)
-    vue.component(`${prefix}-style-white`, StyleWhite)
-    vue.component(`${prefix}-style-metal`, StyleMetal)
+  const { prefix } = options
+  vue.component(`${prefix}`, MyWindow)
+  vue.component(`${prefix}-style-black`, StyleBlack)
+  vue.component(`${prefix}-style-white`, StyleWhite)
+  vue.component(`${prefix}-style-metal`, StyleMetal)
 }
 
 export { windows } from "./windows"
