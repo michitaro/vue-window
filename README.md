@@ -15,6 +15,7 @@ This package is an implementation of window UI for PC environment as a Vue Compo
 * Built-in 3 color themes
 * Open / Close animation
 * Tested on Safari10, Chrome60, Firefox55, IE11, Edge38 For PCs 
+* iOS Support 🎉
 
 ![Screenshot](./docs/screenshot.png)
 
