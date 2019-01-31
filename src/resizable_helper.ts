@@ -1,4 +1,5 @@
 import { naturalSize, getRect } from "./dom"
+import { SinglePointerEvent } from './SinglePointerEvent';
 
 
 export interface Options {
@@ -45,14 +46,20 @@ abstract class HandleBase {
   private handle: HTMLElement
   protected handleSize = 8
 
+  private unbindDown: () => void
+  private unbindMove?: () => void
+  private unbindUp?: () => void
+
   constructor(readonly container: HTMLElement, readonly helper: ResizableHelper) {
     this.handle = this.createHandleElement()
-    this.handle.addEventListener('mousedown', this.mousedown)
+    this.unbindDown = SinglePointerEvent.bindDown(this.handle, this.mousedown)
     // this.handle.style.border = 'solid 1px black'
   }
 
   teardown() {
-    this.handle.removeEventListener('mousedown', this.mousedown)
+    this.unbindDown()
+    this.unbindUp && this.unbindUp()
+    this.unbindMove && this.unbindMove()
     this.handle.parentElement!.removeChild(this.handle)
   }
 
@@ -63,7 +70,7 @@ abstract class HandleBase {
   protected width0!: number
   protected height0!: number
 
-  private mousedown = (e: MouseEvent) => {
+  private mousedown = (e: SinglePointerEvent) => {
     e.preventDefault()
     e.stopPropagation()
     const { left, top, width, height } = getRect(this.container)
@@ -75,8 +82,8 @@ abstract class HandleBase {
     this.height0 = height
     this.calcSafeBoundaries()
     this.helper.options.onResizeStart && this.helper.options.onResizeStart()
-    document.addEventListener('mousemove', this.mousemove)
-    document.addEventListener('mouseup', this.mouseup)
+    this.unbindMove = SinglePointerEvent.bindMove(document, this.mousemove)
+    this.unbindUp = SinglePointerEvent.bindUp(document, this.mouseup)
   }
 
   private minLeft!: number
@@ -103,9 +110,9 @@ abstract class HandleBase {
     this.maxBottom = Math.min(top + maxHeight, window.innerHeight)
   }
 
-  protected abstract setPosition(e: MouseEvent): void;
+  protected abstract setPosition(e: SinglePointerEvent): void;
 
-  private mousemove = (e: MouseEvent) => {
+  private mousemove = (e: SinglePointerEvent) => {
     e.preventDefault()
     e.stopPropagation()
     this.setPosition(e)
@@ -142,12 +149,13 @@ abstract class HandleBase {
     }
   }
 
-  private mouseup = (e: MouseEvent) => {
+  private mouseup = (e: SinglePointerEvent) => {
     e.preventDefault()
     e.stopPropagation()
     this.helper.options.onResizeEnd && this.helper.options.onResizeEnd()
-    document.removeEventListener('mousemove', this.mousemove)
-    document.removeEventListener('mouseup', this.mouseup)
+    this.unbindUp!()
+    this.unbindMove!()
+    this.unbindUp = this.unbindMove = undefined
   }
 
   protected abstract applyStyle(style: CSSStyleDeclaration): void
@@ -167,7 +175,7 @@ abstract class HandleBase {
 
 HandleClasses.push(
   class BottomRight extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.width = `${this.width0 + e.clientX - this.x0}px`
       this.container.style.height = `${this.height0 + e.clientY - this.y0}px`
     }
@@ -180,7 +188,7 @@ HandleClasses.push(
     }
   },
   class Bottom extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.height = `${this.height0 + e.clientY - this.y0}px`
     }
     applyStyle(style: CSSStyleDeclaration) {
@@ -192,7 +200,7 @@ HandleClasses.push(
     }
   },
   class BottomLeft extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.left = `${this.left0 + e.clientX - this.x0}px`
       this.container.style.width = `${this.width0 - (e.clientX - this.x0)}px`
       this.container.style.height = `${this.height0 + e.clientY - this.y0}px`
@@ -206,7 +214,7 @@ HandleClasses.push(
     }
   },
   class Left extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.left = `${this.left0 + e.clientX - this.x0}px`
       this.container.style.width = `${this.width0 - (e.clientX - this.x0)}px`
     }
@@ -219,7 +227,7 @@ HandleClasses.push(
     }
   },
   class TopLeft extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.left = `${this.left0 + e.clientX - this.x0}px`
       this.container.style.width = `${this.width0 - (e.clientX - this.x0)}px`
       this.container.style.top = `${this.top0 + e.clientY - this.y0}px`
@@ -234,7 +242,7 @@ HandleClasses.push(
     }
   },
   class Top extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.top = `${this.top0 + e.clientY - this.y0}px`
       this.container.style.height = `${this.height0 - (e.clientY - this.y0)}px`
     }
@@ -247,7 +255,7 @@ HandleClasses.push(
     }
   },
   class TopRight extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.top = `${this.top0 + e.clientY - this.y0}px`
       this.container.style.height = `${this.height0 - (e.clientY - this.y0)}px`
       this.container.style.width = `${this.width0 + e.clientX - this.x0}px`
@@ -261,7 +269,7 @@ HandleClasses.push(
     }
   },
   class Right extends HandleBase {
-    setPosition(e: MouseEvent) {
+    setPosition(e: SinglePointerEvent) {
       this.container.style.width = `${this.width0 + e.clientX - this.x0}px`
     }
     applyStyle(style: CSSStyleDeclaration) {
