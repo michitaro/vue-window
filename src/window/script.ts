@@ -43,8 +43,8 @@ export class WindowType extends Vue {
   @Prop({ type: Boolean, default: true })
   activateWhenOpen!: boolean
 
-  @Prop({ type: String, default: 'auto' })
-  positionHint!: string
+  @Prop({ type: String })
+  positionHint?: string
 
   @Prop({ type: Number, default: 0 })
   zGroup!: number
@@ -131,7 +131,7 @@ export class WindowType extends Vue {
       this.$nextTick(() => {
         if (this.openCount++ == 0) {
           this.setWindowRect(this)
-          setPosition(this, this.positionHint)
+          this.setInitialPosition()
         }
         this.resizable && this.onWindowResize()
         this.onWindowMove()
@@ -262,6 +262,71 @@ export class WindowType extends Vue {
     }
   }
 
+  // todo: cleanup
+  private setInitialPosition() {
+    const el = this.windowElement()
+    const { width, height } = naturalSize(el)
+    let left: number
+    let top: number
+    if ((this.left !== undefined) != (this.top !== undefined)) {
+      throw new Error(`Either of left or top is specified. Both must be set or not set.`)
+    }
+    if (typeof this.left == 'number') {
+      left = this.left
+      top = this.top as number
+    }
+    else {
+      const positionString = this.positionHint || 'auto'
+      switch (positionString) {
+        case 'auto':
+          {
+            let x = 20
+            let y = 50
+            let nTries = 0
+            do {
+              if (instances.every(j => {
+                if (!j.isOpen || this == j)
+                  return true
+                const p = leftTop(j)
+                if (p == null)
+                  return true
+                const { left, top } = p
+                return distance2(left, top, x, y) > 16
+              })) {
+                break
+              }
+              x = (x + 40) % (window.innerWidth - 200)
+              y = (y + 40) % (window.innerHeight - 200)
+            } while (++nTries < 100)
+            left = x
+            top = y
+          }
+          break
+        case 'center':
+          left = (window.innerWidth - width) / 2
+          top = (window.innerHeight - height) / 2
+          break
+        default:
+          try {
+            const nums = positionString.split('/').map(Number)
+            if (nums.length != 2)
+              throw null
+            const [x, y] = nums
+            if (!isFinite(x) || !isFinite(y))
+              throw null
+            left = x >= 0 ? x : window.innerWidth - width + x
+            top = y >= 0 ? y : window.innerHeight - height + y
+          }
+          catch (e) {
+            throw new Error(`invalid position string: ${positionString}`)
+          }
+      }
+    }
+    el.style.left = `${left}px`
+    el.style.top = `${top}px`
+  }
+
+
   closeButtonClick() {
     this.$emit('closebuttonclick')
     this.$emit('update:isOpen', false)
@@ -294,61 +359,6 @@ function leftTop(w: WindowType) {
   if (!isNaN(left) && !isNaN(top))
     return { left, top }
   return null
-}
-
-
-// todo: cleanup
-function setPosition(w: WindowType, positionString: string) {
-  const el = w.windowElement()
-  const { width, height } = naturalSize(el)
-  let left: number
-  let top: number
-  switch (positionString) {
-    case 'auto':
-      {
-        let x = 20
-        let y = 50
-        let nTries = 0
-        do {
-          if (instances.every(j => {
-            if (!j.isOpen || w == j)
-              return true
-            const p = leftTop(j)
-            if (p == null)
-              return true
-            const { left, top } = p
-            return distance2(left, top, x, y) > 16
-          })) {
-            break
-          }
-          x = (x + 40) % (window.innerWidth - 200)
-          y = (y + 40) % (window.innerHeight - 200)
-        } while (++nTries < 100)
-        left = x
-        top = y
-      }
-      break
-    case 'center':
-      left = (window.innerWidth - width) / 2
-      top = (window.innerHeight - height) / 2
-      break
-    default:
-      try {
-        const nums = positionString.split('/').map(Number)
-        if (nums.length != 2)
-          throw null
-        const [x, y] = nums
-        if (!isFinite(x) || !isFinite(y))
-          throw null
-        left = x >= 0 ? x : window.innerWidth - width + x
-        top = y >= 0 ? y : window.innerHeight - height + y
-      }
-      catch (e) {
-        throw new Error(`invalid position string: ${positionString}`)
-      }
-  }
-  el.style.left = `${left}px`
-  el.style.top = `${top}px`
 }
 
 
