@@ -49,6 +49,9 @@ export class WindowType extends Vue {
   @Prop({ type: Number, default: 0 })
   zGroup!: number
 
+  @Prop({ type: Number, default: 0 })
+  zOffset?: number
+
   @Prop({ default: 'visible' })
   overflow!: string
 
@@ -64,7 +67,7 @@ export class WindowType extends Vue {
 
   mounted() {
     instances.push(this)
-    this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`)
+    this.zElement = new ZElement(this.zGroup, zIndex => this.zIndex = `${zIndex}`, this.zOffset)
     this.isOpen && this.onIsOpenChange(true)
     windows.add(this)
   }
