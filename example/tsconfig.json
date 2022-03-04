@@ -1,20 +1,9 @@
 {
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "experimentalDecorators": true,
-        "declaration": true,
-        "declarationDir": "types",
-        "strict": true,
-        "target": "es5",
-        "importHelpers": true,
-        "noUnusedLocals": true,
-        "lib": [
-            "dom",
-            "es5",
-            "es2015.collection"
-        ]
+        "declaration": false
     },
     "include": [
-        "src/**/*.ts"
+        "./src/**/*.ts"
     ]
 }
