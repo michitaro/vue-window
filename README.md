@@ -34,6 +34,7 @@ npm install --save @hscmap/vue-window
 ```typescript
 import Vue from 'vue'
 import * as VueWindow from '@hscmap/vue-window'
+import '@hscmap/vue-window/main.css'
 
 Vue.use(VueWindow)
 ```
@@ -41,7 +42,22 @@ Vue.use(VueWindow)
 ### CommonJS
 ```javascript
 var Vue = require('vue')
+require('@hscmap/vue-window/main.css')
 Vue.use(require('@hscmap/vue-window'))
+```
+
+### Browser
+```html
+<html>
+	<head>
+		<link rel="stylesheet" href="my/path/to/@hscmap/vue-window/lib/main.css"/>
+		<script src="my/path/to/vue/dist/vue.js"></script>
+		<script src="my/path/to/@hscmap/vue-window/lib/index.js"></script>
+		<script>
+			Vue.use(VueWindow);
+		</script>
+	</head>
+</html>
 ```
 
 # Example

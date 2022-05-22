@@ -33,6 +33,7 @@
     "gh-pages": "^2.0.1",
     "js-base64": "^2.5.1",
     "lodash": "^4.17.11",
+    "mini-css-extract-plugin": "^2.6.0",
     "sass": "^1.49.9",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
