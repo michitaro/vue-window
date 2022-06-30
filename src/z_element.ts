@@ -1,7 +1,7 @@
 export class ZElement {
   zIndex?: number
 
-  constructor(private _group: number, public onChange: (zIndex: number) => void) {
+  constructor(private _group: number, public onChange: (zIndex: number) => void, private _offset: number = 0) {
     this.a(a => a.push(this))
   }
 
@@ -16,6 +16,10 @@ export class ZElement {
 
   get group() {
     return this._group
+  }
+  
+  get zIndexOffset(): number {
+    return this._offset
   }
 
   unregister() {
@@ -66,15 +70,18 @@ function compare(a: number, b: number): number {
 
 
 function refresh() {
-  let zIndex = BASE
+  let zIndex: number = BASE
   for (const g of keys(registry).sort(compare)) {
-    for (const z of a(g)) {
-      if (zIndex != z.zIndex) {
-        z.zIndex = zIndex
-        z.onChange(zIndex)
+    const groups: ZElement[] = a(g)
+    let groupIndex: number = (groups[0] && groups[0].zIndexOffset) ? Number(groups[0].zIndexOffset) : zIndex
+    for (const z of groups) {
+      if (groupIndex != z.zIndex) {
+        z.zIndex = groupIndex
+        z.onChange(groupIndex)
       }
-      zIndex++
+      groupIndex++
     }
+    zIndex += groups.length
   }
 }
 
